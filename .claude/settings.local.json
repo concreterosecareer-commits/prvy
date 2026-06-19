@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(npx --yes create-next-app@15 . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)",
+      "Bash(npx --yes create-next-app@15 prvy-app --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)",
+      "Bash(npx --yes shadcn@latest init -y -b neutral --force)",
+      "Bash(npm install *)",
+      "Bash(npx --yes shadcn@latest init --help)",
+      "Bash(npx --yes shadcn@latest init -y -f -t next)",
+      "Bash(npx --yes shadcn@latest init -y -f -t next -b radix)",
+      "Bash(npx --yes shadcn@latest init -y -f -t next -b radix -p nova)",
+      "Bash(npx --yes shadcn@latest add button input card avatar dialog dropdown-menu sheet tabs badge table label separator scroll-area skeleton sonner select textarea switch progress chart sidebar tooltip popover form -y)",
+      "Bash(mkdir -p \"\\(auth\\)/login\" \"\\(auth\\)/signup\" \"\\(auth\\)/verify-otp\" \"\\(auth\\)/reset-password\")",
+      "Bash(mkdir -p \"\\(dashboard\\)/dashboard\" \"\\(dashboard\\)/messages\" \"\\(dashboard\\)/connections\" \"\\(dashboard\\)/dancers\" \"\\(dashboard\\)/profile/[username]\" \"\\(dashboard\\)/wallet\" \"\\(dashboard\\)/buy-gems\" \"\\(dashboard\\)/transactions\" \"\\(dashboard\\)/invite-earn\" \"\\(dashboard\\)/analytics\" \"\\(dashboard\\)/notifications\" \"\\(dashboard\\)/settings\" \"\\(dashboard\\)/support\")",
+      "Bash(mkdir -p \"\\(admin\\)/admin/users\" \"\\(admin\\)/admin/transactions\" \"\\(admin\\)/admin/reports\" \"\\(admin\\)/admin/settings\")",
+      "Bash(npm run *)",
+      "Bash(npx --yes shadcn@latest add form input-otp -y)",
+      "Bash(npx tsc *)",
+      "Bash(xargs grep -l \"Relationships\")",
+      "Bash(xargs grep -ln \"GenericSchema =\")",
+      "Bash(mkdir -p \"C:\\\\Users\\\\ASUS PC\\\\Documents\\\\Prvy\\\\.claude\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(python3 -c ' *)",
+      "mcp__17bd3e38-e028-4ccb-a66d-5dc3100e123b__apply_migration",
+      "mcp__17bd3e38-e028-4ccb-a66d-5dc3100e123b__execute_sql",
+      "PowerShell($bytes = [System.IO.File]::ReadAllBytes\\(\"C:\\\\Users\\\\ASUS PC\\\\Documents\\\\Prvy\\\\public\\\\logo-wide.png\"\\); $w = [BitConverter]::ToUInt32\\([byte[]]\\($bytes[19],$bytes[18],$bytes[17],$bytes[16]\\),0\\); $h = [BitConverter]::ToUInt32\\([byte[]]\\($bytes[23],$bytes[22],$bytes[21],$bytes[20]\\),0\\); \"Width: $w, Height: $h, Ratio: $\\([math]::Round\\($w/$h,2\\)\\)\")",
+      "PowerShell(cd \"C:\\\\Users\\\\ASUS PC\\\\Documents\\\\Prvy\" ; ls node_modules | Where-Object { $_.Name -eq \"emoji-picker-react\" })",
+      "PowerShell(netstat -ano)",
+      "Bash(node -e \"const p = require\\('C:/Users/ASUS PC/Documents/Prvy/package.json'\\); console.log\\('react:', p.dependencies.react, 'next:', p.dependencies.next\\)\")"
+    ]
+  }
+}

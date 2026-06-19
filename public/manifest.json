@@ -1,0 +1,17 @@
+{
+  "name": "PRVY — Private. Discreet. Connected.",
+  "short_name": "PRVY",
+  "description": "A private patron-management and messaging platform connecting entertainers and patrons.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0c0a09",
+  "theme_color": "#0c0a09",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ]
+}
