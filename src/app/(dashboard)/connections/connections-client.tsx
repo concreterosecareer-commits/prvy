@@ -162,7 +162,7 @@ function InviteCard({
       <div className="min-w-0 flex-1">
         <p className="text-sm font-semibold">{invite.name}</p>
         <p className="text-xs text-muted-foreground">@{invite.username} · {invite.time}</p>
-        <p className="mt-0.5 truncate text-xs text-muted-foreground italic">"{invite.message}"</p>
+        <p className="mt-0.5 truncate text-xs text-muted-foreground italic">&ldquo;{invite.message}&rdquo;</p>
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
@@ -328,7 +328,7 @@ export function ConnectionsClient({ isDancer }: { isDancer: boolean }) {
                 <UserPlus className="h-6 w-6 text-muted-foreground" />
               </div>
               <p className="text-sm font-medium">No pending invitations</p>
-              <p className="text-xs text-muted-foreground">When someone invites you, they'll appear here.</p>
+              <p className="text-xs text-muted-foreground">When someone invites you, they&apos;ll appear here.</p>
             </div>
           ) : (
             <div className="space-y-1">

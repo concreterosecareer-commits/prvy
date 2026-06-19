@@ -105,7 +105,7 @@ function SearchBar({ role }: { role?: string }) {
 
       {open && query.trim() && results.length === 0 && (
         <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 rounded-xl border bg-card px-4 py-3 shadow-lg">
-          <p className="text-sm text-muted-foreground">No results for "{query}"</p>
+          <p className="text-sm text-muted-foreground">No results for &ldquo;{query}&rdquo;</p>
         </div>
       )}
     </div>
