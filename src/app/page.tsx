@@ -113,7 +113,7 @@ export default function LandingPage() {
           borderBottom: "1px solid oklch(1 0 0 / 15%)",
         }}
       >
-        <Logo height={85} src="/pirvy-logo-4-appheader.png" aspectRatio={3.41} />
+        <Logo height={85} />
         <nav className="hidden items-center gap-8 text-sm text-white/60 md:flex">
           <a href="#features" className="transition hover:text-white">
             Features

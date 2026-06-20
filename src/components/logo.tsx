@@ -9,7 +9,7 @@ interface LogoProps {
   aspectRatio?: number;
 }
 
-export function Logo({ className, height = 40, invert = true, src = "/logo.png", aspectRatio = 1.7 }: LogoProps) {
+export function Logo({ className, height = 40, invert = true, src = "/pirvy-logo-final.png", aspectRatio = 3.4 }: LogoProps) {
   return (
     <Image
       src={src}
