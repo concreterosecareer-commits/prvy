@@ -84,7 +84,7 @@ function UserProfileSheet({
           </div>
           <div className="flex gap-2">
             <Badge variant="secondary" className={`text-xs ${ROLE_STYLES[user.role] ?? ""}`}>
-              {user.role === "Entertainer" ? "Dancer" : user.role}
+              {user.role === "Entertainer" ? "Entertainer" : user.role}
             </Badge>
             <Badge variant="secondary" className={`text-xs ${STATUS_STYLES[user.status] ?? ""}`}>
               {user.status}
@@ -180,7 +180,7 @@ export function UserManagementTable({ limit = 6 }: { limit?: number }) {
                 </TableCell>
                 <TableCell className="py-2.5">
                   <Badge variant="secondary" className={`text-[10px] ${ROLE_STYLES[u.role] ?? ""}`}>
-                    {u.role === "Entertainer" ? "Dancer" : u.role}
+                    {u.role === "Entertainer" ? "Entertainer" : u.role}
                   </Badge>
                 </TableCell>
                 <TableCell className="py-2.5">

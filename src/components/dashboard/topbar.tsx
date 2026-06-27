@@ -34,7 +34,7 @@ function SearchBar({ role }: { role?: string }) {
 
   const isDancer = role === "entertainer";
   const pool = isDancer ? MOCK_ALL_PATRONS : MOCK_ALL_DANCERS;
-  const placeholder = isDancer ? "Search for Patrons" : "Search for Dancers";
+  const placeholder = isDancer ? "Search for Patrons" : "Search for Entertainers";
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();

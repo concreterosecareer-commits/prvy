@@ -28,7 +28,7 @@ export default function AdminSettingsPage() {
           <div className="space-y-5 p-5">
             <div className="space-y-1.5">
               <Label className="text-sm font-medium">Default Commission Rate (%)</Label>
-              <p className="text-xs text-muted-foreground">Applied to all dancer payouts</p>
+              <p className="text-xs text-muted-foreground">Applied to all entertainer payouts</p>
               <Input type="number" defaultValue={15} className="max-w-xs bg-muted/40 border-none focus-visible:ring-1" />
             </div>
             <div className="space-y-1.5">

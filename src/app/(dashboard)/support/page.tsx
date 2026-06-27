@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 
 const FAQS = [
   { q: "How do I buy gems?", a: "Go to Buy Gems and select a package, then pay with Coinbase Pay, MetaMask, or WalletConnect." },
-  { q: "How do referrals work?", a: "Share your invite link from Invite & Earn — you earn 15% of commission on invited dancers' earnings." },
+  { q: "How do referrals work?", a: "Share your invite link from Invite & Earn — you earn 15% of commission on invited entertainers' earnings." },
   { q: "Is my phone number ever shared?", a: "No. PRVY messaging never shares phone numbers between patrons and entertainers." },
 ];
 

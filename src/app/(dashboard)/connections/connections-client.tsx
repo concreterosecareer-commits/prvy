@@ -240,7 +240,7 @@ export function ConnectionsClient({ isDancer }: { isDancer: boolean }) {
           <div className="flex items-center gap-3">
             <TabsList>
               <TabsTrigger value="all">
-                {isDancer ? "My Patrons" : "All Dancers"}
+                {isDancer ? "My Patrons" : "All Entertainers"}
               </TabsTrigger>
               <TabsTrigger value="invitations" className="relative">
                 Invitations
@@ -259,7 +259,7 @@ export function ConnectionsClient({ isDancer }: { isDancer: boolean }) {
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder={isDancer ? "Search patrons..." : "Search dancers..."}
+                placeholder={isDancer ? "Search patrons..." : "Search entertainers..."}
                 className="h-9 w-56 pl-9 text-sm"
               />
             </div>
@@ -307,7 +307,7 @@ export function ConnectionsClient({ isDancer }: { isDancer: boolean }) {
           /* Dancer card grid */
           <>
             {filteredDancers.length === 0 ? (
-              <p className="py-8 text-center text-sm text-muted-foreground">No dancers found.</p>
+              <p className="py-8 text-center text-sm text-muted-foreground">No entertainers found.</p>
             ) : (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {filteredDancers.map((d) => (

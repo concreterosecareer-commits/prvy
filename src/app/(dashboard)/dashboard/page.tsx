@@ -76,14 +76,14 @@ export default async function DashboardPage() {
           />
         ) : (
           <StatCard
-            label="Active Dancers"
+            label="Active Entertainers"
             value="32"
             icon={Users}
             trend="↑ 5 new this week"
             footer={
               <Link href="/connections">
                 <Button size="sm" className="w-full text-xs bg-[var(--brand-red)] text-white hover:bg-[var(--brand-red-dark)]">
-                  View Dancers
+                  View Entertainers
                 </Button>
               </Link>
             }
@@ -145,7 +145,7 @@ export default async function DashboardPage() {
           <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="text-white">
               <p className="text-xs font-semibold uppercase tracking-widest text-white/60">For you</p>
-              <h2 className="mt-1 text-2xl font-bold">Discover Dancers</h2>
+              <h2 className="mt-1 text-2xl font-bold">Discover Entertainers</h2>
               <p className="mt-1 text-sm text-white/70">
                 Browse curated profiles and connect privately.
               </p>
@@ -154,7 +154,7 @@ export default async function DashboardPage() {
               <Link href="/connections">
                 <Button className="bg-white px-6 text-[var(--brand-red)] hover:bg-white/90 font-semibold">
                   <Users className="mr-2 h-4 w-4" />
-                  Browse Dancers
+                  Browse Entertainers
                 </Button>
               </Link>
             </div>

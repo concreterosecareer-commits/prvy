@@ -4,7 +4,7 @@ const FEATURES = [
   { icon: Gem, title: "Private Messaging", subtitle: "No phone numbers" },
   { icon: ShieldCheck, title: "Secure Payments", subtitle: "Crypto. No chargebacks" },
   { icon: Eye, title: "Discreet & Private", subtitle: "Your data, your control" },
-  { icon: Gift, title: "Dancer Rewards", subtitle: "Earn from invites" },
+  { icon: Gift, title: "Entertainer Rewards", subtitle: "Earn from invites" },
   { icon: Users, title: "Invite Only", subtitle: "Access by invite" },
   { icon: Headset, title: "24/7 Support", subtitle: "We're here for you" },
 ];

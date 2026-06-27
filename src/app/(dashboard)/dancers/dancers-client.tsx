@@ -163,8 +163,8 @@ export function DancersClient({ isDancer }: { isDancer: boolean }) {
     );
   }, [search]);
 
-  const title = isDancer ? "Discover Patrons" : "Discover Dancers";
-  const placeholder = isDancer ? "Search patrons..." : "Search dancers...";
+  const title = isDancer ? "Discover Patrons" : "Discover Entertainers";
+  const placeholder = isDancer ? "Search patrons..." : "Search entertainers...";
   const items = isDancer ? filteredPatrons : filteredDancers;
 
   return (

@@ -19,7 +19,7 @@ export default async function HotSpotsPage({
       <div>
         <h1 className="text-2xl font-bold">Hot Spots</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Top venues where dancers and patrons connect.
+          Top venues where entertainers and patrons connect.
         </p>
       </div>
 

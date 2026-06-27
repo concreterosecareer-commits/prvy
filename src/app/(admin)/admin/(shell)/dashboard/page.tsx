@@ -57,7 +57,7 @@ function AdminStatCard({ label, value, icon: Icon, accent }: StatCardProps) {
 export default function AdminDashboardPage() {
   const stats = [
     { label: "Total Users",  value: formatCompactNumber(MOCK_PLATFORM_STATS.totalUsers),        icon: Users,      accent: "var(--brand-red)" },
-    { label: "Dancers",      value: formatCompactNumber(MOCK_PLATFORM_STATS.totalEntertainers), icon: UserCircle, accent: "#8b5cf6" },
+    { label: "Entertainers",      value: formatCompactNumber(MOCK_PLATFORM_STATS.totalEntertainers), icon: UserCircle, accent: "#8b5cf6" },
     { label: "Patrons",      value: formatCompactNumber(MOCK_PLATFORM_STATS.totalPatrons),      icon: Crown,      accent: "#0ea5e9" },
     { label: "Revenue",      value: `$${formatCompactNumber(MOCK_PLATFORM_STATS.totalRevenue)}`,icon: DollarSign, accent: "#10b981" },
     { label: "Gems Sold",    value: formatCompactNumber(MOCK_PLATFORM_STATS.gemsSold),          icon: Gem,        accent: "#f59e0b" },
@@ -133,7 +133,7 @@ export default function AdminDashboardPage() {
                     <p className="truncate text-xs text-muted-foreground">{u.joined}</p>
                   </div>
                   <Badge variant="secondary" className={`shrink-0 text-[10px] ${ROLE_STYLES[u.role] ?? ""}`}>
-                    {u.role === "Entertainer" ? "Dancer" : u.role}
+                    {u.role === "Entertainer" ? "Entertainer" : u.role}
                   </Badge>
                 </div>
               ))}

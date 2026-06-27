@@ -68,7 +68,7 @@ export default function SignupPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="patron">Patron</SelectItem>
-              <SelectItem value="entertainer">Dancer</SelectItem>
+              <SelectItem value="entertainer">Entertainer</SelectItem>
             </SelectContent>
           </Select>
         </div>

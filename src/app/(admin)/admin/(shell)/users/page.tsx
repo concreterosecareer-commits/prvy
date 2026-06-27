@@ -23,9 +23,9 @@ import { MOCK_USERS_TABLE } from "@/lib/mock-admin-data";
 /* ─── types ───────────────────────────────────────────────── */
 
 type UserRow = (typeof MOCK_USERS_TABLE)[number];
-type Filter  = "All" | "Dancers" | "Patrons" | "Suspended";
+type Filter  = "All" | "Entertainers" | "Patrons" | "Suspended";
 
-const FILTERS: Filter[] = ["All", "Dancers", "Patrons", "Suspended"];
+const FILTERS: Filter[] = ["All", "Entertainers", "Patrons", "Suspended"];
 
 const STATUS_STYLES: Record<string, string> = {
   Active:    "bg-emerald-500/10 text-emerald-600",
@@ -112,7 +112,7 @@ export default function AdminUsersPage() {
   /* ── filtered view ── */
   const filtered = useMemo(() => {
     let list = users;
-    if (activeFilter === "Dancers")   list = list.filter((u) => u.role === "Entertainer");
+    if (activeFilter === "Entertainers") list = list.filter((u) => u.role === "Entertainer");
     if (activeFilter === "Patrons")   list = list.filter((u) => u.role === "Patron");
     if (activeFilter === "Suspended") list = list.filter((u) => u.status === "Suspended" || u.status === "Banned");
     if (query.trim()) {
@@ -206,7 +206,7 @@ export default function AdminUsersPage() {
                     </TableCell>
                     <TableCell className="py-2.5">
                       <Badge variant="secondary" className={`text-[11px] ${ROLE_STYLES[u.role] ?? ""}`}>
-                        {u.role === "Entertainer" ? "Dancer" : u.role}
+                        {u.role === "Entertainer" ? "Entertainer" : u.role}
                       </Badge>
                     </TableCell>
                     <TableCell className="py-2.5">

@@ -30,7 +30,7 @@ export const PRIMARY_NAV: NavItem[] = [
   { label: "Messages", href: "/messages", icon: MessageSquare },
   { label: "Connections", href: "/connections", icon: Users },
   { label: "Hot Spots", href: "/hot-spots", icon: HotSpotsIcon },
-  { label: "Dancers", labelForDancer: "Patrons", href: "/dancers", icon: UserCircle },
+  { label: "Entertainers", labelForDancer: "Patrons", href: "/dancers", icon: UserCircle },
   { label: "Wallet", href: "/wallet", icon: Wallet },
   { label: "Buy Gems", href: "/buy-gems", icon: Gem, patronOnly: true },
   { label: "Transactions", href: "/transactions", icon: Receipt, patronOnly: true },

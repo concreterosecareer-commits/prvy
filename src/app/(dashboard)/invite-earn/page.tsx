@@ -28,7 +28,7 @@ export default function InviteEarnPage() {
         <div className="flex items-center gap-2 text-lg font-bold">
           <Gift className="h-5 w-5" /> Earn 15%
         </div>
-        <p className="mt-1 text-sm text-white/70">From your invited dancers&apos; earnings</p>
+        <p className="mt-1 text-sm text-white/70">From your invited entertainers&apos; earnings</p>
 
         <p className="mb-2 mt-5 text-xs text-white/70">Your Invite Link</p>
         <div className="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2">
