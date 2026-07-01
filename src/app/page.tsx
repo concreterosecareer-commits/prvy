@@ -147,7 +147,7 @@ export default function LandingPage() {
         {/* Hero background image */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/make_it_a_dark_red_202606272046.jpeg"
+          src="/Cover 1.jpg"
           alt=""
           aria-hidden
           className="absolute inset-0 h-full w-full object-cover"
