@@ -113,7 +113,7 @@ export default function LandingPage() {
           borderBottom: "1px solid oklch(1 0 0 / 15%)",
         }}
       >
-        <Logo height={85} />
+        <Logo height={85} className="h-[50px] md:h-[85px]" />
         <nav className="hidden items-center gap-8 text-sm text-white/60 md:flex">
           <a href="#features" className="transition hover:text-white">
             Features
@@ -126,7 +126,7 @@ export default function LandingPage() {
           </a>
         </nav>
         <div className="flex items-center gap-3">
-          <Link href="/login">
+          <Link href="/login" className="hidden sm:block">
             <Button
               variant="ghost"
               className="text-white/80 hover:bg-white/10 hover:text-white"
