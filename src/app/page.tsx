@@ -144,13 +144,21 @@ export default function LandingPage() {
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden px-6 pb-28 pt-40 text-center md:px-12 md:pt-52" style={{ marginTop: "-96px" }}>
-        {/* Hero background image */}
+        {/* Hero background image — Cover 3 on mobile, bar/lounge on md+ */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/Cover 3.jpg"
+          alt=""
+          aria-hidden
+          className="absolute inset-0 h-full w-full object-cover md:hidden"
+          style={{ zIndex: 0 }}
+        />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/make_it_a_dark_red_202606272046.jpeg"
           alt=""
           aria-hidden
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover hidden md:block"
           style={{ zIndex: 0 }}
         />
         {/* Dark overlay */}
