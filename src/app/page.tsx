@@ -200,7 +200,7 @@ export default function LandingPage() {
           </div>
 
           <h1 className="mx-auto max-w-4xl text-5xl font-bold leading-[1.1] tracking-tight uppercase md:text-7xl">
-            Private Spaces.{" "}
+            Exceptional Service.{" "}
             <span
               className="inline-block"
               style={{
@@ -211,7 +211,7 @@ export default function LandingPage() {
                 backgroundClip: "text",
               }}
             >
-              Exceptional Comfort.
+              Privacy Secured.
             </span>
           </h1>
 
