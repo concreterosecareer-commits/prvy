@@ -17,6 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { StatusDot } from "@/components/dashboard/status-dot";
 import { formatUsd } from "@/lib/format";
+import { sanitizeText, sanitizeUsername } from "@/lib/sanitize";
 
 const RATES = [
   { label: "Private Chat (1hr)", gems: 500 },
@@ -162,23 +163,27 @@ export default function AccountPage() {
   async function saveEdit() {
     if (!userId) return;
     setSaving(true);
+    const cleanName     = sanitizeText(draftName);
+    const cleanUsername = sanitizeUsername(draftUsername);
+    const cleanBio      = sanitizeText(draftBio);
+    const cleanLocation = sanitizeText(draftLocation);
     const { error } = await supabase
       .from("profiles")
       .update({
-        display_name: draftName,
-        username: draftUsername,
-        bio: draftBio,
-        location: draftLocation,
+        display_name: cleanName,
+        username:     cleanUsername,
+        bio:          cleanBio,
+        location:     cleanLocation,
       })
       .eq("id", userId);
 
     if (error) {
       toast.error("Could not save profile: " + error.message);
     } else {
-      setDisplayName(draftName);
-      setUsername(draftUsername);
-      setBio(draftBio);
-      setLocation(draftLocation);
+      setDisplayName(cleanName);
+      setUsername(cleanUsername);
+      setBio(cleanBio);
+      setLocation(cleanLocation);
       setEditing(false);
       cacheProfile({ displayName: draftName, username: draftUsername });
       router.refresh();

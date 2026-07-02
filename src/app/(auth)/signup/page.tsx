@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { createClient } from "@/lib/supabase/client";
+import { sanitizeEmail } from "@/lib/sanitize";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
@@ -37,7 +38,7 @@ export default function SignupPage() {
     setLoading(true);
 
     const { error } = await supabase.auth.signUp({
-      email,
+      email: sanitizeEmail(email),
       password,
       options: {
         data: { role },
@@ -52,7 +53,7 @@ export default function SignupPage() {
       return;
     }
 
-    router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
+    router.push(`/verify-otp?email=${encodeURIComponent(sanitizeEmail(email))}`);
   }
 
   return (

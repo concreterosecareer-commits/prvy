@@ -5,7 +5,9 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "admin2024";
 const COOKIE_NAME    = "prvy-admin-session";
 
 export async function POST(request: NextRequest) {
-  const { email, password } = await request.json();
+  const body = await request.json();
+  const email    = (typeof body.email    === "string" ? body.email.trim().toLowerCase() : "");
+  const password = (typeof body.password === "string" ? body.password.trim()            : "");
   if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }

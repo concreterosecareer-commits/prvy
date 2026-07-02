@@ -19,6 +19,7 @@ import { Switch } from "@/components/ui/switch";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
+import { sanitizeText, sanitizeUsername, sanitizePhone } from "@/lib/sanitize";
 
 const SECTIONS = [
   { id: "account", label: "Account", icon: User },
@@ -96,10 +97,13 @@ export default function SettingsPage() {
   async function saveAccount() {
     if (!userId) return;
     const supabase = createClient();
+    const cleanName     = sanitizeText(displayName);
+    const cleanUsername = sanitizeUsername(username);
+    const cleanPhone    = sanitizePhone(phone);
 
     const { error } = await supabase
       .from("profiles")
-      .update({ display_name: displayName, username })
+      .update({ display_name: cleanName, username: cleanUsername })
       .eq("id", userId);
 
     if (error) {
@@ -109,7 +113,10 @@ export default function SettingsPage() {
 
     try {
       const current = JSON.parse(localStorage.getItem(storageKey) ?? "{}");
-      localStorage.setItem(storageKey, JSON.stringify({ ...current, displayName, username }));
+      localStorage.setItem(storageKey, JSON.stringify({ ...current, displayName: cleanName, username: cleanUsername }));
+      setDisplayName(cleanName);
+      setUsername(cleanUsername);
+      setPhone(cleanPhone);
     } catch {}
 
     router.refresh();

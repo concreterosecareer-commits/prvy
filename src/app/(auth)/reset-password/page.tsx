@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
+import { sanitizeEmail } from "@/lib/sanitize";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
@@ -20,7 +21,7 @@ function RequestResetForm() {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error } = await supabase.auth.resetPasswordForEmail(sanitizeEmail(email), {
       redirectTo: `${window.location.origin}/reset-password`,
     });
 

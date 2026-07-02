@@ -10,7 +10,7 @@ export async function adminLogin(
   _prevState: { error: string } | null,
   formData: FormData,
 ): Promise<{ error: string }> {
-  const email    = (formData.get("email")    as string ?? "").trim();
+  const email    = (formData.get("email")    as string ?? "").trim().toLowerCase();
   const password = (formData.get("password") as string ?? "").trim();
 
   if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {

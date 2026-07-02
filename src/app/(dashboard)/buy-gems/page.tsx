@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { sanitizeNumeric } from "@/lib/sanitize";
 
 const PACKAGES = [
   { gems: 500, price: 10 },
@@ -58,7 +59,7 @@ export default function BuyGemsPage() {
               placeholder="Enter amount"
               value={custom}
               onChange={(e) => {
-                setCustom(e.target.value);
+                setCustom(sanitizeNumeric(e.target.value));
                 setSelected(-1);
               }}
               className="text-center"

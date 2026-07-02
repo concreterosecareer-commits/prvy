@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
+import { sanitizeEmail } from "@/lib/sanitize";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
@@ -29,7 +30,7 @@ function LoginForm() {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({ email: sanitizeEmail(email), password });
 
     setLoading(false);
 
