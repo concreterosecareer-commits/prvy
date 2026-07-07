@@ -1,0 +1,457 @@
+==============================================================
+                    PRIVY — USER MANUAL
+                    Version 1.0  |  June 2026
+==============================================================
+
+PRIVY is a private social platform that connects Patrons and
+Entertainers. Patrons discover performers, send tips via Gems, and
+book real-world venue experiences. Entertainers manage their
+profile, track earnings, and grow their audience.
+
+--------------------------------------------------------------
+TABLE OF CONTENTS
+--------------------------------------------------------------
+ 1. Getting Started
+    1.1  Creating an Account
+    1.2  Verifying Your Email (verification email link)
+    1.3  Logging In
+    1.4  Resetting Your Password
+
+ 2. Dashboard Overview
+
+ 3. Entertainers
+    3.1  Browsing Entertainers (Patrons)
+    3.2  Managing Your Profile (Entertainers)
+
+ 4. Hot Spots
+
+ 5. Messages & Connections
+    5.1  Connections
+    5.2  Messages
+
+ 6. Gems & Wallet
+    6.1  What Are Gems?
+    6.2  Buying Gems
+    6.3  Your Wallet
+    6.4  Transactions
+
+ 7. Analytics (Entertainers)
+
+ 8. Invite & Earn
+
+ 9. Notifications
+
+10. Account & Settings
+
+11. Support
+
+12. Admin Panel (Staff Only)
+    12.1  Logging In
+    12.2  Dashboard
+    12.3  User Management
+    12.4  Transactions
+    12.5  Reports
+    12.6  Settings
+
+--------------------------------------------------------------
+1. GETTING STARTED
+--------------------------------------------------------------
+
+1.1  Creating an Account
+--------------------------
+1. Open the PRIVY app and tap "Get Started" or "Sign Up."
+2. Enter your email address and choose a secure password.
+3. Select your account type:
+     - Patron       — you want to discover and connect with
+                      entertainers.
+     - Entertainer  — you are a performer who wants to earn
+                      on the platform.
+4. Tap "Create Account."
+5. PRIVY will send a verification link to your email address —
+   see Section 1.2.
+
+1.2  Verifying Your Email
+---------------------------
+1. After signing up, you are taken to the "Check your email"
+   screen.
+2. Open your inbox and look for an email from PRIVY.
+3. Click the "Verify my account" link inside the email.
+4. You will be taken directly to your dashboard — no code
+   to type.
+
+   TIP: The link expires after 24 hours. If you do not see
+   the email, check your spam folder or tap "Resend
+   verification link" on the verification screen.
+
+1.3  Logging In
+-----------------
+1. Open the PRIVY app and tap "Sign In."
+2. Enter your registered email and password.
+3. Tap "Sign In." You will be taken to your dashboard.
+
+1.4  Resetting Your Password
+------------------------------
+1. On the login screen, tap "Forgot password?"
+2. Enter your email address and tap "Send Reset Link."
+3. Check your inbox and follow the link to set a new password.
+
+--------------------------------------------------------------
+2. DASHBOARD OVERVIEW
+--------------------------------------------------------------
+
+The Dashboard is your home screen after logging in. It shows:
+
+  - Welcome message with your name and role.
+  - Gem Balance — your current in-app currency balance and
+    its USD equivalent.
+  - Unread Messages — count of new messages waiting for you.
+  - Active Connections — number of people you are connected
+    with.
+  - Hot Spots — quick view of top venues near you.
+  - Recent Activity — latest interactions on your account.
+
+Patrons see a "Buy Gems" shortcut button in the Gem Balance
+card. Entertainers see a "Check Income" shortcut instead.
+
+--------------------------------------------------------------
+3. DANCERS
+--------------------------------------------------------------
+
+3.1  Browsing Entertainers (Patrons)
+---------------------------------
+1. Tap "Entertainers" in the left sidebar.
+2. Browse performer cards showing their name, username,
+   location, and a short bio.
+3. Use the search bar at the top to find a entertainer by name
+   or username.
+4. Filter results by city or category using the filter chips.
+5. Tap a entertainer's card to view their full profile, then:
+     - Tap "Message" to start a conversation.
+     - Tap the gift icon to send a Gem tip.
+
+3.2  Managing Your Profile (Entertainers)
+--------------------------------------
+1. Tap "Account" or your avatar in the sidebar to open your
+   profile.
+2. Update your display name, username, bio, location, and
+   profile photo.
+3. Your profile is visible to all Patrons on the platform.
+
+--------------------------------------------------------------
+4. HOT SPOTS
+--------------------------------------------------------------
+
+Hot Spots are real-world venues where Entertainers and Patrons
+meet and connect.
+
+1. Tap "Hot Spots" in the sidebar.
+2. Browse venues grouped by city.
+3. Use the city filter tabs at the top to narrow results to
+   a specific city.
+4. Tap a venue card to see its full details — address,
+   hours, and which entertainers are associated with it.
+5. Tap "Visit" or the link on the venue card for directions.
+
+--------------------------------------------------------------
+5. MESSAGES & CONNECTIONS
+--------------------------------------------------------------
+
+5.1  Connections
+------------------
+1. Tap "Connections" in the sidebar.
+2. You will see three tabs:
+     - Connected    — people you are already connected with.
+     - Invitations  — pending connection requests you have
+                      received.
+     - Suggested    — people you may want to connect with.
+3. To accept an invitation, tap the green check button.
+4. To decline, tap the red X button.
+5. To connect with someone from Suggested, tap "Connect."
+
+5.2  Messages
+---------------
+1. Tap "Messages" in the sidebar.
+2. Your conversation list appears on the left (or top on
+   mobile).
+3. Tap a conversation to open it.
+4. Type your message in the text box at the bottom and press
+   Enter or tap the send button.
+5. You can send Gem tips directly from the message thread.
+
+--------------------------------------------------------------
+6. GEMS & WALLET
+--------------------------------------------------------------
+
+6.1  What Are Gems?
+---------------------
+Gems are PRIVY's in-app currency. Patrons buy Gems and use
+them to tip Entertainers, unlock premium content, and send gifts.
+Entertainers receive Gems as earnings and can withdraw them as USD.
+
+  100 Gems = $1.00 USD (default rate — may vary)
+
+6.2  Buying Gems
+------------------
+1. Tap "Buy Gems" in the sidebar, or tap "Buy Gems" from
+   your Wallet or Dashboard.
+2. Select a Gem package:
+     - 500 Gems    — $10
+     - 1,000 Gems  — $20
+     - 2,500 Gems  — $50
+     - 5,000 Gems  — $100
+     - 10,000 Gems — $200  (Best Value)
+     - Custom amount — enter a number manually.
+3. Choose a payment method:
+     - Coinbase Pay
+     - MetaMask
+     - Wallet Connect
+4. Tap "Complete Purchase" to finalize.
+
+6.3  Your Wallet
+------------------
+1. Tap "Wallet" in the sidebar.
+2. Your wallet card shows your current Gem balance and its
+   USD value.
+3. VIP members see a "VIP" badge on their wallet card.
+4. Quick-buy buttons (500 / 1K / 2.5K / 5K / 10K) let you
+   top up fast without going to the full Buy Gems page.
+5. Entertainers also see a withdrawal section to cash out their
+   Gem earnings to USD.
+
+6.4  Transactions
+-------------------
+1. Tap "Transactions" in the sidebar.
+2. See a full history of your Gem purchases, tips sent,
+   tips received, and withdrawals.
+3. Each entry shows the date, amount, type, and status
+   (Completed / Pending / Failed).
+
+--------------------------------------------------------------
+7. ANALYTICS  (Entertainers Only)
+--------------------------------------------------------------
+
+1. Tap "Analytics" in the sidebar.
+2. View your earnings performance over time:
+     - Earnings chart — daily/weekly revenue trend.
+     - Earnings by source — breakdown (tips, subscriptions,
+       etc.).
+     - Total Gems received, total USD earned, and active
+       patron count.
+3. Use the date range selector to filter by period.
+
+--------------------------------------------------------------
+8. INVITE & EARN
+--------------------------------------------------------------
+
+PRIVY rewards you for growing the community.
+
+1. Tap "Invite & Earn" in the sidebar.
+2. Copy your unique invite link and share it with friends.
+3. When someone signs up using your link and becomes a
+   Entertainer, you earn 15% of their Gem earnings automatically.
+4. Your invite earnings appear in your Wallet and
+   Transactions history.
+5. The Invite & Earn page also shows a list of people you
+   have already invited and their current status.
+
+--------------------------------------------------------------
+9. NOTIFICATIONS
+--------------------------------------------------------------
+
+1. Tap the bell icon (top bar) or "Notifications" in the
+   sidebar.
+2. See alerts for:
+     - New connection requests.
+     - Messages received.
+     - Gem tips received.
+     - Platform announcements.
+3. Tap any notification to go directly to the relevant
+   screen.
+
+--------------------------------------------------------------
+10. ACCOUNT & SETTINGS
+--------------------------------------------------------------
+
+Account
+--------
+1. Tap "Account" in the sidebar.
+2. Edit your display name, username, bio, and profile photo.
+3. Tap "Save" to apply changes.
+
+Settings
+---------
+1. Tap "Settings" in the sidebar.
+2. Manage:
+     - Notification preferences (email, push).
+     - Privacy settings (who can message you, see your
+       profile, etc.).
+     - Payment methods.
+     - Password and security.
+3. Tap "Save Changes" to apply.
+
+Logging Out
+------------
+1. Tap your avatar or name at the bottom of the sidebar.
+2. Tap "Log Out."
+
+--------------------------------------------------------------
+11. SUPPORT
+--------------------------------------------------------------
+
+1. Tap "Support" in the sidebar.
+2. Browse the FAQ section for quick answers to common
+   questions.
+3. To contact the PRIVY support team, fill in the contact
+   form with:
+     - Your name
+     - Your email
+     - A description of your issue
+4. Tap "Submit" and the team will respond via email.
+
+--------------------------------------------------------------
+12. ADMIN PANEL  (Staff Only)
+--------------------------------------------------------------
+
+The Admin Panel is a separate area for PRIVY staff to manage
+the platform. It is not accessible to regular users.
+
+12.1  Logging In
+------------------
+1. Navigate to: yourdomain.com/admin/login
+2. Enter the admin email and password.
+   Default credentials (change after first login):
+     Email:    admin@PRIVY.com
+     Password: admin2024
+3. Click "Sign In." You are taken to the Admin Dashboard.
+
+   NOTE: Admin credentials are controlled by the ADMIN_EMAIL
+   and ADMIN_PASSWORD environment variables on the server.
+   Update these in your hosting platform (e.g., Vercel) for
+   production use.
+
+12.2  Admin Dashboard
+-----------------------
+The dashboard gives a live platform overview:
+  - Total Users, Entertainers, Patrons, Revenue, Gems Sold,
+    Active Now — displayed as stat cards.
+  - User Management table — quick view of the 6 most recent
+    users with inline action buttons.
+  - Recent Signups — newest members.
+  - Platform Health — today's messages, connections, and
+    active Hot Spots.
+
+12.3  User Management
+-----------------------
+1. Click "Users" in the admin sidebar.
+2. See the full list of all platform users.
+3. Use the filter chips to view:
+     - All / Entertainers / Patrons / Suspended users.
+4. Use the search bar to find a user by name or username.
+5. Each row has three action buttons:
+     - Eye icon     — View the user's full profile (opens a
+                      side panel with email, location, gems,
+                      sessions, and join date).
+     - Shield icon  — Suspend or Unsuspend the user.
+                      (Amber = suspend active user;
+                       Green  = unsuspend suspended user.)
+     - Ban icon     — Ban or Unban the user.
+                      (Red   = ban active user;
+                       Green = unban banned user.)
+6. Status changes reflect immediately in the table and
+   status badge.
+7. The "..." (More) menu on each row also provides:
+     - Suspend / Unsuspend
+     - Delete user (removes them from the table permanently).
+
+12.4  Transactions
+--------------------
+1. Click "Transactions" in the admin sidebar.
+2. View all platform financial activity:
+     - Total Revenue, Total Inflow, Total Outflow — summary
+       cards at the top.
+     - Full transaction table with user, type, amount, date,
+       and status columns.
+
+12.5  Reports
+---------------
+1. Click "Reports" in the admin sidebar.
+2. See all user-submitted reports at a glance:
+     - Summary cards: Total / Open / Resolved counts.
+     - Full reports table with reporter, target, reason,
+       date, and status.
+3. Click "Review" on an open report to investigate it.
+   Resolved reports show a "Done" badge and the button is
+   disabled.
+
+12.6  Admin Settings
+----------------------
+1. Click "Settings" in the admin sidebar.
+2. Manage platform-wide configuration:
+
+   Financial Settings
+     - Default Commission Rate (%) applied to entertainer payouts.
+     - Gem-to-USD conversion rate.
+     - Minimum withdrawal amount ($).
+
+   Platform Controls (toggle switches)
+     - New Signups     — allow/block new registrations.
+     - Email Verification — require OTP before account access.
+     - Two-Factor Auth — enforce 2FA for admin accounts.
+     - Maintenance Mode — temporarily disable patron access.
+     - Explicit Content — allow/block adult media uploads.
+
+   Admin Notifications
+     - New user signup
+     - New report filed
+     - Large withdrawal (> $500)
+     - Failed payment
+
+3. Click "Save Changes" to apply, or "Discard" to cancel.
+
+--------------------------------------------------------------
+QUICK REFERENCE — SIDEBAR NAVIGATION
+--------------------------------------------------------------
+
+  Icon / Label       What it does
+  -----------------  -----------------------------------------
+  Dashboard          Home screen — activity overview
+  Entertainers            Browse or manage entertainer profiles
+  Hot Spots          Discover top venues by city
+  Connections        Manage your network & invitations
+  Messages           Chat with your connections
+  Wallet             View balance, quick-buy Gems, withdraw
+  Buy Gems           Purchase Gem packages
+  Transactions       Full payment & earning history
+  Analytics          Earnings charts (Entertainers only)
+  Invite & Earn      Share your referral link, track invites
+  Notifications      Alerts and platform updates
+  Account            Edit your profile
+  Settings           App preferences and privacy
+  Support            FAQ and contact form
+
+--------------------------------------------------------------
+TIPS & BEST PRACTICES
+--------------------------------------------------------------
+
+  - Keep your profile photo up to date so patrons can
+    recognise you.
+  - Entertainers: check Analytics weekly to understand which
+    content drives the most Gem income.
+  - Patrons: the 10,000 Gem package offers the best value
+    per dollar.
+  - Use the Invite & Earn programme — 15% passive income
+    adds up quickly.
+  - If you believe a user is violating community guidelines,
+    use the report button on their profile.
+
+--------------------------------------------------------------
+CONTACT & SUPPORT
+--------------------------------------------------------------
+
+  In-app:   Sidebar → Support
+  Email:    contact@blackstimeconsulting.com
+  Website:  PRIVY.app
+
+==============================================================
+                  © 2026 PRIVY. All rights reserved.
+==============================================================

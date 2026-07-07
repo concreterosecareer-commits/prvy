@@ -18,13 +18,13 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "PRVY — Private. Discreet. Connected.",
+  title: "PRIVY — Private. Discreet. Connected.",
   description: "A private patron-management and messaging platform connecting entertainers and patrons.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "PRVY",
+    title: "PRIVY",
   },
 };
 

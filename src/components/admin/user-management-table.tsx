@@ -40,11 +40,11 @@ const ROLE_STYLES: Record<string, string> = {
 const MOCK_PROFILE: Record<string, { email: string; location: string; gems: number; sessions: number }> = {
   "1": { email: "sasha@example.com",  location: "Houston, TX",  gems: 1200, sessions: 47  },
   "2": { email: "janet@example.com",  location: "Atlanta, GA",  gems: 8400, sessions: 130 },
-  "3": { email: "sapphire@prvy.com",  location: "Dallas, TX",   gems: 6200, sessions: 98  },
+  "3": { email: "sapphire@privy.com",  location: "Dallas, TX",   gems: 6200, sessions: 98  },
   "4": { email: "davidm@example.com", location: "Austin, TX",   gems: 340,  sessions: 12  },
   "5": { email: "jules@example.com",  location: "Miami, FL",    gems: 2100, sessions: 55  },
   "6": { email: "marcus@example.com", location: "Chicago, IL",  gems: 900,  sessions: 31  },
-  "7": { email: "luna@prvy.com",      location: "Las Vegas, NV", gems: 5500, sessions: 88  },
+  "7": { email: "luna@privy.com",      location: "Las Vegas, NV", gems: 5500, sessions: 88  },
   "8": { email: "brianw@example.com", location: "Phoenix, AZ",  gems: 50,   sessions: 3   },
 };
 

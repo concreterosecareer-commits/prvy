@@ -84,7 +84,7 @@ const STEPS = [
     step: "01",
     title: "Request your invite",
     description:
-      "Sign up and verify your identity. PRVY is curated — we keep the community safe and exclusive.",
+      "Sign up and verify your identity. PRIVY is curated — we keep the community safe and exclusive.",
   },
   {
     step: "02",
@@ -136,7 +136,7 @@ export default function LandingPage() {
           </Link>
           <Link href="/signup">
             <Button className="bg-[var(--brand-red)] text-white shadow-lg shadow-[var(--brand-red)]/30 hover:bg-[var(--brand-red-dark)]">
-              Join PRVY
+              Join PRIVY
             </Button>
           </Link>
         </div>
@@ -282,7 +282,7 @@ export default function LandingPage() {
       <section id="features" className="px-6 py-24 md:px-12">
         <div className="mx-auto max-w-6xl">
           <div className="mb-3 text-center text-xs font-medium uppercase tracking-[0.25em] text-[var(--brand-red)]">
-            Why PRVY
+            Why PRIVY
           </div>
           <h2 className="mb-4 text-center text-3xl font-bold md:text-4xl">
             Built for privacy from day one
@@ -513,7 +513,7 @@ export default function LandingPage() {
                 Join the community
               </div>
               <h2 className="mt-4 text-3xl font-bold md:text-4xl">
-                Ready to join PRVY?
+                Ready to join PRIVY?
               </h2>
               <p className="mx-auto mt-4 max-w-md text-sm text-white/55">
                 Apply for your invite today and become part of the most discreet,
@@ -558,7 +558,7 @@ export default function LandingPage() {
             <Link href="/signup" className="hover:text-white/60 transition">Sign up</Link>
           </nav>
           <p className="text-xs text-white/20">
-            © {new Date().getFullYear()} PRVY. All rights reserved.
+            © {new Date().getFullYear()} PRIVY. All rights reserved.
           </p>
         </div>
       </footer>

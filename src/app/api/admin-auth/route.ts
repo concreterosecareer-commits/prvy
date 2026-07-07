@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-const ADMIN_EMAIL    = process.env.ADMIN_EMAIL    ?? "admin@prvy.com";
+const ADMIN_EMAIL    = process.env.ADMIN_EMAIL    ?? "admin@privy.com";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "admin2024";
 const COOKIE_NAME    = "prvy-admin-session";
 

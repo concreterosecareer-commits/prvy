@@ -47,7 +47,7 @@ function LoginForm() {
     <div>
       <h1 className="text-2xl font-bold">Welcome back</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Log in to your PRVY account to continue.
+        Log in to your PRIVY account to continue.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">

@@ -162,7 +162,7 @@ export const MOCK_TRANSACTIONS_TABLE = [
 ];
 
 export const MOCK_INVITES = [
-  { id: "1", name: "Luna",     username: "luna_star",  message: "Hey! I'd love to connect with you on PRVY.",          time: "2h ago",    status: "pending" },
+  { id: "1", name: "Luna",     username: "luna_star",  message: "Hey! I'd love to connect with you on PRIVY.",          time: "2h ago",    status: "pending" },
   { id: "2", name: "Raven",    username: "raven_xo",   message: "Looking forward to getting to know you better!",       time: "5h ago",    status: "pending" },
   { id: "3", name: "Kiki",     username: "kiki_v",     message: "Heard great things — let's connect!",                 time: "Yesterday", status: "pending" },
   { id: "4", name: "Sapphire", username: "sapphire",   message: "Would love to chat sometime 💎",                      time: "May 17",    status: "pending" },

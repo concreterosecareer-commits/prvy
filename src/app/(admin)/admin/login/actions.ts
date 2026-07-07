@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const ADMIN_EMAIL    = process.env.ADMIN_EMAIL    ?? "admin@prvy.com";
+const ADMIN_EMAIL    = process.env.ADMIN_EMAIL    ?? "admin@privy.com";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "admin2024";
 
 export async function adminLogin(

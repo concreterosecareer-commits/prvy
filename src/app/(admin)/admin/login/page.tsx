@@ -53,7 +53,7 @@ export default function AdminLoginPage() {
                   <Input
                     type="email"
                     name="email"
-                    placeholder="admin@prvy.com"
+                    placeholder="admin@privy.com"
                     className="pl-10"
                     required
                   />
@@ -92,7 +92,7 @@ export default function AdminLoginPage() {
         </div>
 
         <p className="mt-4 text-center text-xs text-[var(--brand-red)]/60">
-          PRVY Admin · Restricted Access
+          PRIVY Admin · Restricted Access
         </p>
       </div>
     </div>

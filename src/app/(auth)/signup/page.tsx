@@ -60,7 +60,7 @@ export default function SignupPage() {
     <div>
       <h1 className="text-2xl font-bold">Create your account</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Join PRVY and start connecting privately.
+        Join PRIVY and start connecting privately.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">

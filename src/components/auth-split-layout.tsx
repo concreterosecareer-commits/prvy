@@ -39,7 +39,7 @@ export function AuthSplitLayout({
           </p>
         </div>
         <p className="relative z-10 text-sm text-white/40">
-          © {new Date().getFullYear()} PRVY. All rights reserved.
+          © {new Date().getFullYear()} PRIVY. All rights reserved.
         </p>
       </div>
 

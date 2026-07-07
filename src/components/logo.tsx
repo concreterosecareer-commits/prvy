@@ -13,7 +13,7 @@ export function Logo({ className, height = 40, invert = true, src = "/pirvy-logo
   return (
     <Image
       src={src}
-      alt="PRVY"
+      alt="PRIVY"
       height={height}
       width={Math.round(height * aspectRatio)}
       className={cn("w-auto object-contain", invert && "brightness-0 invert", className)}
