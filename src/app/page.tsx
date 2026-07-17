@@ -194,11 +194,6 @@ export default function LandingPage() {
         />
 
         <div className="relative z-10">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.25em] text-white">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
-            Private. Discreet. Connected.
-          </div>
-
           <h1 className="mx-auto max-w-4xl text-5xl font-bold leading-[1.1] tracking-tight uppercase md:text-7xl">
             What Diamonds{" "}
             <span
@@ -215,10 +210,7 @@ export default function LandingPage() {
             </span>
           </h1>
 
-          <p className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-white md:text-xl">
-            The exclusive platform connecting entertainers and patrons — with
-            private messaging, crypto payments, and zero data sharing.
-          </p>
+
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link href="/signup">
