@@ -2,8 +2,12 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { FeedClient } from "@/components/feed/feed-client";
 import type { FeedAuthor, FeedPost } from "@/types/feed";
+import type { SuggestedUser } from "@/components/follow/suggested-users";
 
 export const metadata = { title: "Feed — PRIVY" };
+
+// Show suggestions when the user follows fewer than this many people
+const SUGGESTION_THRESHOLD = 5;
 
 export default async function FeedPage() {
   const supabase = await createClient();
@@ -13,7 +17,7 @@ export default async function FeedPage() {
 
   if (!user) redirect("/login");
 
-  /* ── Current user data ─────────────────────────────────── */
+  /* ── Current user ──────────────────────────────────────────── */
   const [{ data: profileRow }, { data: userRow }] = await Promise.all([
     supabase
       .from("profiles")
@@ -33,66 +37,61 @@ export default async function FeedPage() {
     is_verified: profileRow?.is_verified ?? false,
   };
 
-  /* ── Connected user IDs (for personalised feed) ────────── */
-  const { data: connections } = await supabase
-    .from("connections")
-    .select("patron_id, entertainer_id")
-    .or(`patron_id.eq.${user.id},entertainer_id.eq.${user.id}`)
-    .eq("status", "active");
+  /* ── Who the current user follows ─────────────────────────── */
+  const { data: followRows } = await supabase
+    .from("follows")
+    .select("following_id")
+    .eq("follower_id", user.id);
 
-  const connectedIds = (connections ?? []).map((c) =>
-    c.patron_id === user.id ? c.entertainer_id : c.patron_id
-  );
+  const followedIds = (followRows ?? []).map((r) => r.following_id);
+  const followCount = followedIds.length;
 
-  /* ── Fetch posts ────────────────────────────────────────── */
-  // Show: public posts, own posts, posts from active connections
+  /* ── Fetch posts ───────────────────────────────────────────── */
+  // Show: own posts + public posts + followed users' posts (even private ones)
   let postsQuery = supabase
     .from("posts")
     .select("*")
     .order("created_at", { ascending: false })
-    .limit(60);
+    .limit(80);
 
-  if (connectedIds.length > 0) {
+  if (followedIds.length > 0) {
     postsQuery = postsQuery.or(
       [
         "is_public.eq.true",
         `author_id.eq.${user.id}`,
-        `author_id.in.(${connectedIds.join(",")})`,
+        `author_id.in.(${followedIds.join(",")})`,
       ].join(",")
     );
   } else {
-    // No connections yet — show own posts + all public posts
-    postsQuery = postsQuery.or(
-      `is_public.eq.true,author_id.eq.${user.id}`
-    );
+    postsQuery = postsQuery.or(`is_public.eq.true,author_id.eq.${user.id}`);
   }
 
   const { data: rawPosts, error: postsError } = await postsQuery;
 
-  /* ── If the posts table doesn't exist yet, show empty feed ─ */
-  if (postsError) {
-    return (
-      <FeedClient
-        initialPosts={[]}
-        currentUserId={user.id}
-        role={role}
-        currentUser={currentUser}
-      />
-    );
+  /* ── Empty / error fallback ────────────────────────────────── */
+  const emptyResult = async (suggestions: SuggestedUser[]) => (
+    <FeedClient
+      initialPosts={[]}
+      currentUserId={user.id}
+      role={role}
+      currentUser={currentUser}
+      followedIds={followedIds}
+      suggestions={suggestions}
+    />
+  );
+
+  const suggestions = await fetchSuggestions(
+    supabase,
+    user.id,
+    followedIds,
+    followCount
+  );
+
+  if (postsError || !rawPosts || rawPosts.length === 0) {
+    return emptyResult(suggestions);
   }
 
-  if (!rawPosts || rawPosts.length === 0) {
-    return (
-      <FeedClient
-        initialPosts={[]}
-        currentUserId={user.id}
-        role={role}
-        currentUser={currentUser}
-      />
-    );
-  }
-
-  /* ── Author profiles ────────────────────────────────────── */
+  /* ── Author profiles ───────────────────────────────────────── */
   const authorIds = [...new Set(rawPosts.map((p) => p.author_id))];
 
   const { data: profiles } = await supabase
@@ -100,7 +99,7 @@ export default async function FeedPage() {
     .select("id, display_name, username, avatar_url, is_verified")
     .in("id", authorIds);
 
-  /* ── Likes ──────────────────────────────────────────────── */
+  /* ── Likes ─────────────────────────────────────────────────── */
   const postIds = rawPosts.map((p) => p.id);
 
   const { data: likes } = await supabase
@@ -108,7 +107,6 @@ export default async function FeedPage() {
     .select("post_id, user_id")
     .in("post_id", postIds);
 
-  // Build per-post like summary
   const likeMap = (likes ?? []).reduce<
     Record<string, { count: number; likedByMe: boolean }>
   >((acc, l) => {
@@ -118,7 +116,9 @@ export default async function FeedPage() {
     return acc;
   }, {});
 
-  /* ── Merge into FeedPost array ──────────────────────────── */
+  /* ── Build FeedPost[] ─────────────────────────────────────── */
+  const followedSet = new Set(followedIds);
+
   const feedPosts: FeedPost[] = rawPosts.map((p) => {
     const pr = (profiles ?? []).find((x) => x.id === p.author_id);
     const likeInfo = likeMap[p.id] ?? { count: 0, likedByMe: false };
@@ -144,12 +144,52 @@ export default async function FeedPage() {
     };
   });
 
+  /* ── Sort: followed users first, then newest ───────────────── */
+  const sortedPosts = [
+    ...feedPosts.filter(
+      (p) => p.author_id === user.id || followedSet.has(p.author_id)
+    ),
+    ...feedPosts.filter(
+      (p) => p.author_id !== user.id && !followedSet.has(p.author_id)
+    ),
+  ];
+
   return (
     <FeedClient
-      initialPosts={feedPosts}
+      initialPosts={sortedPosts}
       currentUserId={user.id}
       role={role}
       currentUser={currentUser}
+      followedIds={followedIds}
+      suggestions={suggestions}
     />
   );
+}
+
+/* ── Suggested users helper ──────────────────────────────────── */
+async function fetchSuggestions(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  followedIds: string[],
+  followCount: number
+): Promise<SuggestedUser[]> {
+  if (followCount >= SUGGESTION_THRESHOLD) return [];
+
+  const excluded = [...followedIds, userId];
+
+  const { data } = await supabase
+    .from("profiles")
+    .select("id, username, display_name, avatar_url, is_verified, follower_count")
+    .not("id", "in", `(${excluded.join(",")})`)
+    .order("follower_count", { ascending: false })
+    .limit(8);
+
+  return (data ?? []).map((p) => ({
+    id: p.id,
+    username: p.username ?? "unknown",
+    display_name: p.display_name ?? "Unknown",
+    avatar_url: p.avatar_url ?? null,
+    is_verified: p.is_verified ?? false,
+    follower_count: p.follower_count ?? 0,
+  }));
 }

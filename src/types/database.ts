@@ -47,9 +47,18 @@ export type ProfileRow = {
   response_rate: number;
   rating: number;
   patron_count: number;
+  follower_count: number;
+  following_count: number;
   earnings_total: number;
   created_at: string;
   updated_at: string;
+};
+
+export type FollowRow = {
+  id: string;
+  follower_id: string;
+  following_id: string;
+  created_at: string;
 };
 
 export type MediaRow = {
@@ -188,6 +197,7 @@ export type Database = {
       analytics_daily: { Row: AnalyticsDailyRow; Insert: Partial<AnalyticsDailyRow>; Update: Partial<AnalyticsDailyRow>; Relationships: [] };
       posts: { Row: PostRow; Insert: Partial<PostRow>; Update: Partial<PostRow>; Relationships: [] };
       post_likes: { Row: PostLikeRow; Insert: Partial<PostLikeRow>; Update: Partial<PostLikeRow>; Relationships: [] };
+      follows: { Row: FollowRow; Insert: Partial<FollowRow>; Update: Partial<FollowRow>; Relationships: [] };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
