@@ -44,6 +44,7 @@ export type ProfileRow = {
   height: string | null;
   rates: Record<string, unknown> | null;
   is_verified: boolean;
+  is_private: boolean;
   response_rate: number;
   rating: number;
   patron_count: number;
@@ -54,10 +55,13 @@ export type ProfileRow = {
   updated_at: string;
 };
 
+export type FollowStatus = "pending" | "accepted";
+
 export type FollowRow = {
   id: string;
   follower_id: string;
   following_id: string;
+  status: FollowStatus;
   created_at: string;
 };
 

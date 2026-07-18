@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { BadgeCheck, X } from "lucide-react";
+import { BadgeCheck, Lock, X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FollowButton } from "@/components/follow/follow-button";
 
@@ -12,6 +12,7 @@ export interface SuggestedUser {
   display_name: string;
   avatar_url: string | null;
   is_verified: boolean;
+  is_private: boolean;
   follower_count: number;
 }
 
@@ -27,7 +28,7 @@ export function SuggestedUsers({ suggestions, currentUserId }: SuggestedUsersPro
   if (visible.length === 0) return null;
 
   return (
-    <div className="rounded-2xl bg-card shadow-sm p-4">
+    <div className="rounded-2xl bg-card p-4 shadow-sm">
       <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
         Suggested for you
       </p>
@@ -60,6 +61,9 @@ export function SuggestedUsers({ suggestions, currentUserId }: SuggestedUsersPro
                 {u.is_verified && (
                   <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-[var(--brand-red)]" />
                 )}
+                {u.is_private && (
+                  <Lock className="h-3 w-3 shrink-0 text-muted-foreground" />
+                )}
               </div>
               <p className="text-xs text-muted-foreground">
                 {u.follower_count > 0
@@ -68,20 +72,26 @@ export function SuggestedUsers({ suggestions, currentUserId }: SuggestedUsersPro
               </p>
             </div>
 
-            <div className="flex items-center gap-1 shrink-0">
+            <div className="flex shrink-0 items-center gap-1">
               <FollowButton
                 targetUserId={u.id}
                 currentUserId={currentUserId}
-                initialIsFollowing={false}
-                onFollowChange={(isFollowing) => {
-                  if (isFollowing) {
-                    setTimeout(() => setDismissed((prev) => new Set([...prev, u.id])), 600);
+                initialStatus="none"
+                isTargetPrivate={u.is_private}
+                onStatusChange={(s) => {
+                  if (s === "accepted") {
+                    setTimeout(
+                      () => setDismissed((prev) => new Set([...prev, u.id])),
+                      600
+                    );
                   }
                 }}
                 size="sm"
               />
               <button
-                onClick={() => setDismissed((prev) => new Set([...prev, u.id]))}
+                onClick={() =>
+                  setDismissed((prev) => new Set([...prev, u.id]))
+                }
                 aria-label="Dismiss suggestion"
                 className="ml-1 rounded-full p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
               >

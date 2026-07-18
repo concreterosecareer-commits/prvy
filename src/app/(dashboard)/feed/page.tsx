@@ -37,11 +37,12 @@ export default async function FeedPage() {
     is_verified: profileRow?.is_verified ?? false,
   };
 
-  /* ── Who the current user follows ─────────────────────────── */
+  /* ── Who the current user acceptedly follows ──────────────── */
   const { data: followRows } = await supabase
     .from("follows")
     .select("following_id")
-    .eq("follower_id", user.id);
+    .eq("follower_id", user.id)
+    .eq("status", "accepted");
 
   const followedIds = (followRows ?? []).map((r) => r.following_id);
   const followCount = followedIds.length;
@@ -177,19 +178,28 @@ async function fetchSuggestions(
 
   const excluded = [...followedIds, userId];
 
-  const { data } = await supabase
+  // Only suggest public profiles for discovery
+  const query = supabase
     .from("profiles")
-    .select("id, username, display_name, avatar_url, is_verified, follower_count")
-    .not("id", "in", `(${excluded.join(",")})`)
+    .select("id, username, display_name, avatar_url, is_verified, is_private, follower_count")
+    .eq("is_private", false)
     .order("follower_count", { ascending: false })
-    .limit(8);
+    .limit(20);
 
-  return (data ?? []).map((p) => ({
+  // Exclude already-followed users and self
+  if (excluded.length > 0) {
+    query.not("id", "in", `(${excluded.join(",")})`);
+  }
+
+  const { data } = await query;
+
+  return (data ?? []).slice(0, 8).map((p) => ({
     id: p.id,
     username: p.username ?? "unknown",
     display_name: p.display_name ?? "Unknown",
     avatar_url: p.avatar_url ?? null,
     is_verified: p.is_verified ?? false,
+    is_private: false,
     follower_count: p.follower_count ?? 0,
   }));
 }

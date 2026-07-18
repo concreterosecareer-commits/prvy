@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import {
   Camera, MapPin, Globe, Ruler, Star, Users, TrendingUp,
-  Eye, Edit3, Check, X, MessageSquare, Gift, ImagePlus, AtSign, Loader2, Trash2,
+  Eye, Edit3, Check, X, MessageSquare, Gift, ImagePlus, AtSign, Loader2, Trash2, Lock, Unlock,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,8 @@ import { Badge } from "@/components/ui/badge";
 import { StatusDot } from "@/components/dashboard/status-dot";
 import { formatUsd } from "@/lib/format";
 import { sanitizeText, sanitizeUsername } from "@/lib/sanitize";
+import { Switch } from "@/components/ui/switch";
+import { FollowRequests } from "@/components/follow/follow-requests";
 
 const RATES = [
   { label: "Private Chat (1hr)", gems: 500 },
@@ -67,6 +69,10 @@ export default function AccountPage() {
   const [draftBio, setDraftBio] = useState("");
   const [draftLocation, setDraftLocation] = useState("");
 
+  // Privacy
+  const [isPrivate, setIsPrivate] = useState(false);
+  const [savingPrivacy, setSavingPrivacy] = useState(false);
+
   // Media
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
   const [mediaLoading, setMediaLoading] = useState(false);
@@ -88,7 +94,7 @@ export default function AccountPage() {
         const [{ data: profile }, { data: userData }, { data: analytics }, { data: mediaData }] = await Promise.all([
           supabase
             .from("profiles")
-            .select("display_name, username, avatar_url, cover_url, bio, location, height, languages, rating, response_rate, patron_count, earnings_total")
+            .select("display_name, username, avatar_url, cover_url, bio, location, height, languages, rating, response_rate, patron_count, earnings_total, is_private")
             .eq("id", user.id)
             .single(),
           supabase
@@ -120,6 +126,7 @@ export default function AccountPage() {
           setEarnings(Number(profile.earnings_total ?? 0));
           setRating(Number(profile.rating ?? 0));
           setResponseRate(Number(profile.response_rate ?? 0));
+          setIsPrivate(profile.is_private ?? false);
         }
 
         if (userData?.status) {
@@ -241,6 +248,23 @@ export default function AccountPage() {
     cacheProfile({ headerSrc: publicUrl });
     router.refresh();
     toast.success("Cover photo updated!");
+  }
+
+  // ── Privacy toggle ───────────────────────────────────────────────────────
+  async function handlePrivacyChange(next: boolean) {
+    if (!userId) return;
+    setSavingPrivacy(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ is_private: next })
+      .eq("id", userId);
+    if (error) {
+      toast.error("Could not update privacy setting");
+    } else {
+      setIsPrivate(next);
+      toast.success(next ? "Profile set to private" : "Profile set to public");
+    }
+    setSavingPrivacy(false);
   }
 
   // ── Status toggle ────────────────────────────────────────────────────────
@@ -602,18 +626,76 @@ export default function AccountPage() {
         </TabsContent>
       </Tabs>
 
+      {/* ── Privacy settings ──────────────────────────────────── */}
+      <Card className="rounded-2xl border-none p-5 shadow-sm">
+        <h2 className="mb-1 font-semibold">Privacy</h2>
+        <p className="mb-4 text-xs text-muted-foreground">
+          Control who can see your profile and posts.
+        </p>
+
+        <div className="flex items-center justify-between gap-4 rounded-xl border p-4">
+          <div className="flex items-center gap-3">
+            {isPrivate ? (
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
+                <Lock className="h-4 w-4 text-muted-foreground" />
+              </div>
+            ) : (
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--brand-red)]/10">
+                <Unlock className="h-4 w-4 text-[var(--brand-red)]" />
+              </div>
+            )}
+            <div>
+              <p className="text-sm font-medium">
+                {isPrivate ? "Private account" : "Public account"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {isPrivate
+                  ? "Only approved followers can see your posts."
+                  : "Anyone can see your posts and follow you."}
+              </p>
+            </div>
+          </div>
+          <Switch
+            checked={isPrivate}
+            disabled={savingPrivacy}
+            onCheckedChange={handlePrivacyChange}
+            className="data-[state=checked]:bg-[var(--brand-red)]"
+          />
+        </div>
+      </Card>
+
+      {/* ── Follow requests (only shown when private) ─────────── */}
+      {isPrivate && userId && (
+        <Card className="rounded-2xl border-none p-5 shadow-sm">
+          <h2 className="mb-1 font-semibold">Follow Requests</h2>
+          <p className="mb-4 text-xs text-muted-foreground">
+            People who want to follow your private account.
+          </p>
+          <FollowRequests currentUserId={userId} />
+        </Card>
+      )}
+
+      {/* ── Profile preview ───────────────────────────────────── */}
       <Card className="rounded-2xl border-none p-5 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h2 className="font-semibold">How Patrons See Your Profile</h2>
-            <p className="text-xs text-muted-foreground">This is what others see when they visit your page</p>
+            <p className="text-xs text-muted-foreground">
+              This is what others see when they visit your page
+            </p>
           </div>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" className="gap-1.5"><MessageSquare className="h-3.5 w-3.5" /> Message</Button>
-            <Button size="sm" variant="outline" className="gap-1.5"><Gift className="h-3.5 w-3.5" /> Send Tip</Button>
+            <Button size="sm" variant="outline" className="gap-1.5">
+              <MessageSquare className="h-3.5 w-3.5" /> Message
+            </Button>
+            <Button size="sm" variant="outline" className="gap-1.5">
+              <Gift className="h-3.5 w-3.5" /> Send Tip
+            </Button>
           </div>
         </div>
-        <p className="text-sm italic text-muted-foreground">&ldquo;{bio || "No bio yet."}&rdquo;</p>
+        <p className="text-sm italic text-muted-foreground">
+          &ldquo;{bio || "No bio yet."}&rdquo;
+        </p>
       </Card>
     </div>
   );

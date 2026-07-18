@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   BadgeCheck,
+  Lock,
   MapPin,
   Globe,
   Ruler,
@@ -17,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusDot } from "@/components/dashboard/status-dot";
-import { FollowButton } from "@/components/follow/follow-button";
+import { FollowButton, type FollowButtonStatus } from "@/components/follow/follow-button";
 import { FollowListModal } from "@/components/follow/follow-list-modal";
 import { PostCard } from "@/components/feed/post-card";
 import { createClient } from "@/lib/supabase/client";
@@ -46,6 +47,7 @@ interface ProfileData {
   following_count: number;
   earnings_total: number;
   is_verified: boolean;
+  is_private: boolean;
 }
 
 export default function ProfilePage() {
@@ -59,13 +61,12 @@ export default function ProfilePage() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [userStatus, setUserStatus] = useState<"Active" | "Away" | "Offline">("Offline");
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [followStatus, setFollowStatus] = useState<FollowButtonStatus>("none");
   const [followerCount, setFollowerCount] = useState(0);
   const [posts, setPosts] = useState<FeedPost[]>([]);
 
   const [followModal, setFollowModal] = useState<"followers" | "following" | null>(null);
 
-  // Avoid double-fetching in React strict mode
   const fetchedRef = useRef(false);
 
   useEffect(() => {
@@ -73,12 +74,11 @@ export default function ProfilePage() {
     fetchedRef.current = true;
 
     async function load() {
-      // 1. Who am I?
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.replace("/login"); return; }
       setCurrentUserId(user.id);
 
-      // 2. Am I looking at my own profile?
+      // Redirect own profile to /account
       const { data: myProfile } = await supabase
         .from("profiles")
         .select("username")
@@ -89,75 +89,88 @@ export default function ProfilePage() {
         return;
       }
 
-      // 3. Fetch target profile
+      // Fetch target profile (RLS enforces privacy: private profiles return null for non-followers)
       const { data: targetProfile } = await supabase
         .from("profiles")
         .select(
-          "id, username, display_name, avatar_url, cover_url, bio, location, height, languages, rating, response_rate, patron_count, follower_count, following_count, earnings_total, is_verified"
+          "id, username, display_name, avatar_url, cover_url, bio, location, height, languages, rating, response_rate, patron_count, follower_count, following_count, earnings_total, is_verified, is_private"
         )
         .eq("username", username)
         .single();
 
-      if (!targetProfile) { setNotFound(true); setLoading(false); return; }
+      // Profile not found OR private and we're blocked
+      if (!targetProfile) {
+        setNotFound(true);
+        setLoading(false);
+        return;
+      }
 
       setProfile(targetProfile as ProfileData);
       setFollowerCount(targetProfile.follower_count ?? 0);
 
-      // 4. Fetch status + follow state + posts in parallel
-      const [{ data: targetUser }, { count: followCount }, { data: rawPosts }] =
-        await Promise.all([
-          supabase.from("users").select("status").eq("id", targetProfile.id).single(),
-          supabase
-            .from("follows")
-            .select("id", { count: "exact", head: true })
-            .eq("follower_id", user.id)
-            .eq("following_id", targetProfile.id),
-          supabase
-            .from("posts")
-            .select("*")
-            .eq("author_id", targetProfile.id)
-            .eq("is_public", true)
-            .order("created_at", { ascending: false })
-            .limit(30),
-        ]);
+      const [{ data: targetUser }, { data: followRow }] = await Promise.all([
+        supabase.from("users").select("status").eq("id", targetProfile.id).single(),
+        supabase
+          .from("follows")
+          .select("status")
+          .eq("follower_id", user.id)
+          .eq("following_id", targetProfile.id)
+          .maybeSingle(),
+      ]);
 
       setUserStatus(STATUS_LABEL[targetUser?.status ?? "offline"] ?? "Offline");
-      setIsFollowing((followCount ?? 0) > 0);
 
-      // 5. Build FeedPost array for PostCard
-      if (rawPosts && rawPosts.length > 0) {
-        const postIds = rawPosts.map((p) => p.id);
-        const { data: likes } = await supabase
-          .from("post_likes")
-          .select("post_id, user_id")
-          .in("post_id", postIds);
+      const fs: FollowButtonStatus = !followRow
+        ? "none"
+        : (followRow.status as FollowButtonStatus);
+      setFollowStatus(fs);
 
-        const likeMap = (likes ?? []).reduce<Record<string, { count: number; likedByMe: boolean }>>(
-          (acc, l) => {
+      // Only fetch posts if we can see them (public profile or accepted follower)
+      const canSeeContent =
+        !targetProfile.is_private || fs === "accepted";
+
+      if (canSeeContent) {
+        const { data: rawPosts } = await supabase
+          .from("posts")
+          .select("*")
+          .eq("author_id", targetProfile.id)
+          .eq("is_public", true)
+          .order("created_at", { ascending: false })
+          .limit(30);
+
+        if (rawPosts && rawPosts.length > 0) {
+          const postIds = rawPosts.map((p) => p.id);
+          const { data: likes } = await supabase
+            .from("post_likes")
+            .select("post_id, user_id")
+            .in("post_id", postIds);
+
+          const likeMap = (likes ?? []).reduce<
+            Record<string, { count: number; likedByMe: boolean }>
+          >((acc, l) => {
             if (!acc[l.post_id]) acc[l.post_id] = { count: 0, likedByMe: false };
             acc[l.post_id].count++;
             if (l.user_id === user.id) acc[l.post_id].likedByMe = true;
             return acc;
-          },
-          {}
-        );
+          }, {});
 
-        const author = {
-          id: targetProfile.id,
-          display_name: (targetProfile as ProfileData).display_name,
-          username: (targetProfile as ProfileData).username,
-          avatar_url: (targetProfile as ProfileData).avatar_url,
-          is_verified: (targetProfile as ProfileData).is_verified,
-        };
+          const author = {
+            id: targetProfile.id,
+            display_name: targetProfile.display_name,
+            username: targetProfile.username,
+            avatar_url: targetProfile.avatar_url,
+            is_verified: targetProfile.is_verified,
+          };
 
-        setPosts(
-          rawPosts.map((p) => ({
-            ...p,
-            author,
-            like_count: likeMap[p.id]?.count ?? 0,
-            is_liked_by_me: likeMap[p.id]?.likedByMe ?? false,
-          }))
-        );
+          setPosts(
+            rawPosts.map((p) => ({
+              ...p,
+              author,
+              like_count: likeMap[p.id]?.count ?? 0,
+              is_liked_by_me: likeMap[p.id]?.likedByMe ?? false,
+            }))
+          );
+        }
       }
 
       setLoading(false);
@@ -166,9 +179,15 @@ export default function ProfilePage() {
     load();
   }, [username, supabase, router]);
 
-  function handleFollowChange(nowFollowing: boolean) {
-    setIsFollowing(nowFollowing);
-    setFollowerCount((c) => (nowFollowing ? c + 1 : Math.max(0, c - 1)));
+  function handleFollowChange(s: FollowButtonStatus) {
+    const wasAccepted = followStatus === "accepted";
+    const nowAccepted = s === "accepted";
+    setFollowStatus(s);
+    if (nowAccepted && !wasAccepted) {
+      setFollowerCount((c) => c + 1);
+    } else if (!nowAccepted && wasAccepted) {
+      setFollowerCount((c) => Math.max(0, c - 1));
+    }
   }
 
   function handlePostDelete(postId: string) {
@@ -192,12 +211,18 @@ export default function ProfilePage() {
     );
   }
 
-  const initials = profile.display_name
-    .split(" ")
-    .map((p) => p[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase() || "?";
+  const initials =
+    profile.display_name
+      .split(" ")
+      .map((p) => p[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "?";
+
+  const isPrivateLocked =
+    profile.is_private &&
+    followStatus !== "accepted" &&
+    currentUserId !== profile.id;
 
   return (
     <>
@@ -210,11 +235,14 @@ export default function ProfilePage() {
             style={
               profile.cover_url
                 ? { background: `url(${profile.cover_url}) center/cover no-repeat` }
-                : { background: "linear-gradient(135deg, oklch(0.5 0.22 25 / 70%), oklch(0.16 0.01 25))" }
+                : {
+                    background:
+                      "linear-gradient(135deg, oklch(0.5 0.22 25 / 70%), oklch(0.16 0.01 25))",
+                  }
             }
           />
 
-          {/* Avatar + info row */}
+          {/* Avatar + info */}
           <div className="flex flex-wrap items-end gap-4 p-6 pt-0">
             <Avatar className="-mt-12 h-24 w-24 border-4 border-card">
               {profile.avatar_url && (
@@ -230,36 +258,47 @@ export default function ProfilePage() {
             </Avatar>
 
             <div className="min-w-0 flex-1 pt-3">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-xl font-bold">{profile.display_name}</h1>
                 {profile.is_verified && (
                   <BadgeCheck className="h-5 w-5 text-[var(--brand-red)]" />
                 )}
+                {profile.is_private && (
+                  <span className="flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                    <Lock className="h-3 w-3" /> Private
+                  </span>
+                )}
                 <StatusDot status={userStatus} />
               </div>
               <p className="text-sm text-muted-foreground">@{profile.username}</p>
-              {profile.bio && (
-                <p className="mt-2 max-w-md text-sm text-muted-foreground">{profile.bio}</p>
+              {profile.bio && !isPrivateLocked && (
+                <p className="mt-2 max-w-md text-sm text-muted-foreground">
+                  {profile.bio}
+                </p>
               )}
             </div>
 
-            {/* Actions */}
             {currentUserId && (
-              <div className="flex items-center gap-2 pt-3 flex-wrap">
+              <div className="flex flex-wrap items-center gap-2 pt-3">
                 <FollowButton
                   targetUserId={profile.id}
                   currentUserId={currentUserId}
-                  initialIsFollowing={isFollowing}
-                  onFollowChange={handleFollowChange}
+                  initialStatus={followStatus}
+                  isTargetPrivate={profile.is_private}
+                  onStatusChange={handleFollowChange}
                 />
-                <Link href="/messages">
-                  <Button variant="outline" className="gap-2">
-                    <MessageSquare className="h-4 w-4" /> Message
-                  </Button>
-                </Link>
-                <Button variant="outline" className="gap-2">
-                  <Gift className="h-4 w-4" /> Send Tip
-                </Button>
+                {!isPrivateLocked && (
+                  <>
+                    <Link href="/messages">
+                      <Button variant="outline" className="gap-2">
+                        <MessageSquare className="h-4 w-4" /> Message
+                      </Button>
+                    </Link>
+                    <Button variant="outline" className="gap-2">
+                      <Gift className="h-4 w-4" /> Send Tip
+                    </Button>
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -268,16 +307,18 @@ export default function ProfilePage() {
           <div className="grid grid-cols-2 gap-4 border-t px-6 py-4 sm:grid-cols-4">
             <button
               onClick={() => setFollowModal("followers")}
-              className="text-left hover:opacity-75 transition-opacity"
+              className="text-left transition-opacity hover:opacity-75"
             >
               <p className="text-lg font-bold">{followerCount.toLocaleString()}</p>
               <p className="text-xs text-muted-foreground">Followers</p>
             </button>
             <button
               onClick={() => setFollowModal("following")}
-              className="text-left hover:opacity-75 transition-opacity"
+              className="text-left transition-opacity hover:opacity-75"
             >
-              <p className="text-lg font-bold">{profile.following_count.toLocaleString()}</p>
+              <p className="text-lg font-bold">
+                {profile.following_count.toLocaleString()}
+              </p>
               <p className="text-xs text-muted-foreground">Following</p>
             </button>
             <div>
@@ -295,98 +336,117 @@ export default function ProfilePage() {
           </div>
         </Card>
 
-        {/* ── Tabs ──────────────────────────────────────────────── */}
-        <Tabs defaultValue={posts.length > 0 ? "posts" : "about"}>
-          <TabsList>
-            <TabsTrigger value="posts">Posts {posts.length > 0 && `(${posts.length})`}</TabsTrigger>
-            <TabsTrigger value="about">About</TabsTrigger>
-            <TabsTrigger value="rates">Rates</TabsTrigger>
-            <TabsTrigger value="availability">Availability</TabsTrigger>
-          </TabsList>
+        {/* ── Private account lock screen ───────────────────────── */}
+        {isPrivateLocked ? (
+          <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center shadow-sm">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted">
+              <Lock className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <div>
+              <p className="font-semibold">This account is private</p>
+              <p className="mt-1 max-w-xs text-sm text-muted-foreground">
+                {followStatus === "pending"
+                  ? "Your follow request is pending approval."
+                  : "Follow this account to see their photos and posts."}
+              </p>
+            </div>
+          </div>
+        ) : (
+          /* ── Tabs ─────────────────────────────────────────────── */
+          <Tabs defaultValue={posts.length > 0 ? "posts" : "about"}>
+            <TabsList>
+              <TabsTrigger value="posts">
+                Posts {posts.length > 0 && `(${posts.length})`}
+              </TabsTrigger>
+              <TabsTrigger value="about">About</TabsTrigger>
+              <TabsTrigger value="rates">Rates</TabsTrigger>
+              <TabsTrigger value="availability">Availability</TabsTrigger>
+            </TabsList>
 
-          {/* Posts */}
-          <TabsContent value="posts" className="mt-4">
-            {posts.length === 0 ? (
-              <Card className="rounded-2xl border-none p-8 shadow-sm">
-                <p className="text-center text-sm text-muted-foreground">No posts yet.</p>
-              </Card>
-            ) : (
-              <div className="space-y-4 max-w-xl">
-                {posts.map((post) => (
-                  <PostCard
-                    key={post.id}
-                    post={post}
-                    currentUserId={currentUserId ?? ""}
-                    onDelete={handlePostDelete}
-                  />
-                ))}
+            <TabsContent value="posts" className="mt-4">
+              {posts.length === 0 ? (
+                <Card className="rounded-2xl border-none p-8 shadow-sm">
+                  <p className="text-center text-sm text-muted-foreground">
+                    No posts yet.
+                  </p>
+                </Card>
+              ) : (
+                <div className="max-w-xl space-y-4">
+                  {posts.map((post) => (
+                    <PostCard
+                      key={post.id}
+                      post={post}
+                      currentUserId={currentUserId ?? ""}
+                      onDelete={handlePostDelete}
+                    />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="about" className="mt-4">
+              <div className="grid gap-4 lg:grid-cols-[1fr_300px]">
+                <Card className="rounded-2xl border-none p-5 shadow-sm">
+                  <h2 className="mb-3 font-semibold">About Me</h2>
+                  <p className="text-sm text-muted-foreground">
+                    {profile.bio || "No bio yet."}
+                  </p>
+                </Card>
+                <Card className="rounded-2xl border-none p-5 shadow-sm">
+                  <h2 className="mb-3 font-semibold">Info</h2>
+                  <div className="space-y-3 text-sm">
+                    {profile.location && (
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <MapPin className="h-4 w-4 shrink-0" /> {profile.location}
+                      </div>
+                    )}
+                    {profile.languages?.[0] && (
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Globe className="h-4 w-4 shrink-0" />{" "}
+                        {profile.languages[0]}
+                      </div>
+                    )}
+                    {profile.height && (
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Ruler className="h-4 w-4 shrink-0" /> {profile.height}
+                      </div>
+                    )}
+                  </div>
+                </Card>
               </div>
-            )}
-          </TabsContent>
+            </TabsContent>
 
-          {/* About */}
-          <TabsContent value="about" className="mt-4">
-            <div className="grid gap-4 lg:grid-cols-[1fr_300px]">
+            <TabsContent value="rates" className="mt-4">
               <Card className="rounded-2xl border-none p-5 shadow-sm">
-                <h2 className="mb-3 font-semibold">About Me</h2>
+                <div className="divide-y text-sm">
+                  <div className="flex justify-between py-2">
+                    <span>Private Chat (1hr)</span>
+                    <span className="font-semibold">500 Gems</span>
+                  </div>
+                  <div className="flex justify-between py-2">
+                    <span>Video Call (30min)</span>
+                    <span className="font-semibold">1,200 Gems</span>
+                  </div>
+                  <div className="flex justify-between py-2">
+                    <span>Custom Content</span>
+                    <span className="font-semibold">From 800 Gems</span>
+                  </div>
+                </div>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="availability" className="mt-4">
+              <Card className="rounded-2xl border-none p-5 shadow-sm">
                 <p className="text-sm text-muted-foreground">
-                  {profile.bio || "No bio yet."}
+                  {profile.display_name} is currently{" "}
+                  <StatusDot status={userStatus} className="inline-flex" />{" "}
+                  {userStatus.toLowerCase()} and typically responds within a few
+                  minutes.
                 </p>
               </Card>
-              <Card className="rounded-2xl border-none p-5 shadow-sm">
-                <h2 className="mb-3 font-semibold">Info</h2>
-                <div className="space-y-3 text-sm">
-                  {profile.location && (
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <MapPin className="h-4 w-4 shrink-0" /> {profile.location}
-                    </div>
-                  )}
-                  {profile.languages?.[0] && (
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Globe className="h-4 w-4 shrink-0" /> {profile.languages[0]}
-                    </div>
-                  )}
-                  {profile.height && (
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Ruler className="h-4 w-4 shrink-0" /> {profile.height}
-                    </div>
-                  )}
-                </div>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Rates */}
-          <TabsContent value="rates" className="mt-4">
-            <Card className="rounded-2xl border-none p-5 shadow-sm">
-              <div className="divide-y text-sm">
-                <div className="flex justify-between py-2">
-                  <span>Private Chat (1hr)</span>
-                  <span className="font-semibold">500 Gems</span>
-                </div>
-                <div className="flex justify-between py-2">
-                  <span>Video Call (30min)</span>
-                  <span className="font-semibold">1,200 Gems</span>
-                </div>
-                <div className="flex justify-between py-2">
-                  <span>Custom Content</span>
-                  <span className="font-semibold">From 800 Gems</span>
-                </div>
-              </div>
-            </Card>
-          </TabsContent>
-
-          {/* Availability */}
-          <TabsContent value="availability" className="mt-4">
-            <Card className="rounded-2xl border-none p-5 shadow-sm">
-              <p className="text-sm text-muted-foreground">
-                {profile.display_name} is currently{" "}
-                <StatusDot status={userStatus} className="inline-flex" /> {userStatus.toLowerCase()}{" "}
-                and typically responds within a few minutes.
-              </p>
-            </Card>
-          </TabsContent>
-        </Tabs>
+            </TabsContent>
+          </Tabs>
+        )}
       </div>
 
       {/* Followers / Following modals */}
