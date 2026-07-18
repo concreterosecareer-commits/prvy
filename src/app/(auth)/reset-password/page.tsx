@@ -113,7 +113,7 @@ function NewPasswordForm() {
     }
 
     toast.success("Password updated");
-    router.push("/dashboard");
+    router.push("/feed");
   }
 
   return (

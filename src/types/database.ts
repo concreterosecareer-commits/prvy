@@ -140,6 +140,26 @@ export type NotificationRow = {
   created_at: string;
 };
 
+export type PostType = "user" | "club";
+
+export type PostRow = {
+  id: string;
+  author_id: string;
+  type: PostType;
+  image_url: string;
+  caption: string | null;
+  is_public: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type PostLikeRow = {
+  id: string;
+  post_id: string;
+  user_id: string;
+  created_at: string;
+};
+
 export type AnalyticsDailyRow = {
   id: string;
   user_id: string;
@@ -166,6 +186,8 @@ export type Database = {
       referrals: { Row: ReferralRow; Insert: Partial<ReferralRow>; Update: Partial<ReferralRow>; Relationships: [] };
       notifications: { Row: NotificationRow; Insert: Partial<NotificationRow>; Update: Partial<NotificationRow>; Relationships: [] };
       analytics_daily: { Row: AnalyticsDailyRow; Insert: Partial<AnalyticsDailyRow>; Update: Partial<AnalyticsDailyRow>; Relationships: [] };
+      posts: { Row: PostRow; Insert: Partial<PostRow>; Update: Partial<PostRow>; Relationships: [] };
+      post_likes: { Row: PostLikeRow; Insert: Partial<PostLikeRow>; Update: Partial<PostLikeRow>; Relationships: [] };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

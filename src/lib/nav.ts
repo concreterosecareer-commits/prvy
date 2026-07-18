@@ -1,5 +1,6 @@
 import {
   LayoutDashboard,
+  Newspaper,
   MessageSquare,
   Users,
   UserCircle,
@@ -27,6 +28,7 @@ export interface NavItem {
 
 export const PRIMARY_NAV: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Feed", href: "/feed", icon: Newspaper },
   { label: "Messages", href: "/messages", icon: MessageSquare },
   { label: "Connections", href: "/connections", icon: Users },
   { label: "Hot Spots", href: "/hot-spots", icon: HotSpotsIcon },
