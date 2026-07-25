@@ -1,5 +1,5 @@
-export type UserRole = "patron" | "entertainer" | "admin";
-export type UserStatus = "active" | "away" | "offline" | "suspended" | "pending";
+export type UserRole = "patron" | "entertainer" | "admin" | "club";
+export type UserStatus = "active" | "working" | "away" | "offline" | "suspended" | "pending";
 export type ConnectionStatus = "pending" | "active" | "blocked" | "declined";
 export type MessageType = "text" | "image" | "video" | "audio" | "tip" | "system";
 export type TransactionType =
@@ -43,6 +43,11 @@ export type ProfileRow = {
   languages: string[] | null;
   height: string | null;
   rates: Record<string, unknown> | null;
+  address: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  working_days: number[] | null;
+  preferred_locations: string[] | null;
   is_verified: boolean;
   is_private: boolean;
   response_rate: number;
@@ -161,6 +166,8 @@ export type PostRow = {
   type: PostType;
   image_url: string;
   caption: string | null;
+  promotion_title: string | null;
+  expires_at: string | null;
   is_public: boolean;
   created_at: string;
   updated_at: string;

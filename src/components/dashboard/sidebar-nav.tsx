@@ -14,6 +14,8 @@ interface SidebarNavProps {
 export function SidebarNav({ unreadCounts, role }: SidebarNavProps) {
   const pathname = usePathname();
   const navItems = PRIMARY_NAV.filter((item) => {
+    if (item.clubOnly && role !== "club") return false;
+    if (item.clubHidden && role === "club") return false;
     if (item.dancerOnly && role !== "entertainer") return false;
     if (item.patronOnly && role === "entertainer") return false;
     return true;

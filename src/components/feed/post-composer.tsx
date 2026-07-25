@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ImagePlus, Loader2, X, Globe, Lock, AlertCircle, CheckCircle2, TrendingDown } from "lucide-react";
+import { ImagePlus, Loader2, X, Globe, Lock, AlertCircle, CheckCircle2, TrendingDown, Ticket, CalendarClock } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -45,6 +45,15 @@ export function PostComposer({
   const [isPublic, setIsPublic] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+
+  // Club promo fields
+  const [promotionTitle, setPromotionTitle] = useState("");
+  const [expiresAt, setExpiresAt] = useState("");
+
+  const isClub = role === "club";
+  const minDateTimeLocal = new Date(Date.now() + 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 16);
 
   /* Revoke the preview object URL on unmount or when it changes */
   useEffect(() => {
@@ -134,6 +143,10 @@ export function PostComposer({
           image_url: urlData.publicUrl,
           caption: cleanCaption,
           is_public: isPublic,
+          ...(isClub && {
+            promotion_title: sanitizeText(promotionTitle.trim()) || null,
+            expires_at: expiresAt ? new Date(expiresAt).toISOString() : null,
+          }),
         })
         .select("*")
         .single();
@@ -151,6 +164,8 @@ export function PostComposer({
       clearImage();
       setCaption("");
       setIsPublic(true);
+      setPromotionTitle("");
+      setExpiresAt("");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
       setPhase("ready");
@@ -164,6 +179,11 @@ export function PostComposer({
   const isPosting = phase === "posting";
   const isOptimizing = phase === "optimizing";
   const hasImage = phase === "ready" || phase === "posting";
+  const canPost =
+    hasImage &&
+    !isPosting &&
+    !isOptimizing &&
+    (!isClub || promotionTitle.trim().length > 0);
 
   const savingsPct =
     optimized && optimized.originalBytes > 0
@@ -279,6 +299,56 @@ export function PostComposer({
         onChange={onFileInputChange}
       />
 
+      {/* ── Club promo fields (title + optional expiry) ─────────── */}
+
+      {isClub && hasImage && (
+        <div className="space-y-2 rounded-xl border border-[var(--brand-red)]/20 bg-[var(--brand-red)]/5 p-3">
+          <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--brand-red)]">
+            <Ticket className="h-3.5 w-3.5" /> Promotion details
+          </p>
+
+          {/* Title — required */}
+          <div className="relative">
+            <input
+              type="text"
+              value={promotionTitle}
+              onChange={(e) => setPromotionTitle(e.target.value.slice(0, 60))}
+              disabled={isPosting}
+              placeholder="Title — e.g. Free Entry, $20 Bottles, VIP Night"
+              className={cn(
+                "w-full rounded-lg border bg-background px-3 py-2 text-sm font-semibold placeholder:font-normal placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--brand-red)]/40 disabled:opacity-50",
+                !promotionTitle.trim() ? "border-[var(--brand-red)]/40" : "border-border"
+              )}
+            />
+            <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[11px] text-muted-foreground">
+              {60 - promotionTitle.length}
+            </span>
+          </div>
+
+          {/* Expiry — optional */}
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <CalendarClock className="h-3.5 w-3.5 shrink-0 text-[var(--brand-red)]/70" />
+            <label className="text-xs">Expires (optional)</label>
+            <input
+              type="datetime-local"
+              value={expiresAt}
+              min={minDateTimeLocal}
+              onChange={(e) => setExpiresAt(e.target.value)}
+              disabled={isPosting}
+              className="flex-1 rounded-md border border-border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--brand-red)]/40 disabled:opacity-50"
+            />
+            {expiresAt && (
+              <button
+                onClick={() => setExpiresAt("")}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* ── Caption ──────────────────────────────────────────────── */}
 
       {hasImage && (
@@ -351,7 +421,7 @@ export function PostComposer({
 
         <Button
           onClick={submit}
-          disabled={!hasImage || isPosting || isOptimizing}
+          disabled={!canPost}
           className="bg-[var(--brand-red)] text-white hover:bg-[var(--brand-red-dark)] min-w-20"
         >
           {isPosting ? (

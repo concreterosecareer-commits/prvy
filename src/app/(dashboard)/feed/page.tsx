@@ -16,21 +16,25 @@ export default async function FeedPage() {
   } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
+  const userId = user.id;
 
   /* ── Current user ──────────────────────────────────────────── */
   const [{ data: profileRow }, { data: userRow }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("display_name, username, avatar_url, is_verified")
-      .eq("id", user.id)
+      .select("display_name, username, avatar_url, is_verified, preferred_locations")
+      .eq("id", userId)
       .single(),
-    supabase.from("users").select("role").eq("id", user.id).single(),
+    supabase.from("users").select("role").eq("id", userId).single(),
   ]);
+
+  const preferredCities: string[] =
+    (profileRow as Record<string, unknown> | null)?.preferred_locations as string[] ?? [];
 
   const role = userRow?.role ?? "patron";
 
   const currentUser: FeedAuthor = {
-    id: user.id,
+    id: userId,
     display_name: profileRow?.display_name ?? user.email?.split("@")[0] ?? "You",
     username: profileRow?.username ?? "me",
     avatar_url: profileRow?.avatar_url ?? null,
@@ -41,7 +45,7 @@ export default async function FeedPage() {
   const { data: followRows } = await supabase
     .from("follows")
     .select("following_id")
-    .eq("follower_id", user.id)
+    .eq("follower_id", userId)
     .eq("status", "accepted");
 
   const followedIds = (followRows ?? []).map((r) => r.following_id);
@@ -59,12 +63,12 @@ export default async function FeedPage() {
     postsQuery = postsQuery.or(
       [
         "is_public.eq.true",
-        `author_id.eq.${user.id}`,
+        `author_id.eq.${userId}`,
         `author_id.in.(${followedIds.join(",")})`,
       ].join(",")
     );
   } else {
-    postsQuery = postsQuery.or(`is_public.eq.true,author_id.eq.${user.id}`);
+    postsQuery = postsQuery.or(`is_public.eq.true,author_id.eq.${userId}`);
   }
 
   const { data: rawPosts, error: postsError } = await postsQuery;
@@ -73,7 +77,7 @@ export default async function FeedPage() {
   const emptyResult = async (suggestions: SuggestedUser[]) => (
     <FeedClient
       initialPosts={[]}
-      currentUserId={user.id}
+      currentUserId={userId}
       role={role}
       currentUser={currentUser}
       followedIds={followedIds}
@@ -83,7 +87,7 @@ export default async function FeedPage() {
 
   const suggestions = await fetchSuggestions(
     supabase,
-    user.id,
+    userId,
     followedIds,
     followCount
   );
@@ -97,7 +101,7 @@ export default async function FeedPage() {
 
   const { data: profiles } = await supabase
     .from("profiles")
-    .select("id, display_name, username, avatar_url, is_verified")
+    .select("id, display_name, username, avatar_url, is_verified, location")
     .in("id", authorIds);
 
   /* ── Likes ─────────────────────────────────────────────────── */
@@ -113,7 +117,7 @@ export default async function FeedPage() {
   >((acc, l) => {
     if (!acc[l.post_id]) acc[l.post_id] = { count: 0, likedByMe: false };
     acc[l.post_id].count++;
-    if (l.user_id === user.id) acc[l.post_id].likedByMe = true;
+    if (l.user_id === userId) acc[l.post_id].likedByMe = true;
     return acc;
   }, {});
 
@@ -145,20 +149,37 @@ export default async function FeedPage() {
     };
   });
 
-  /* ── Sort: followed users first, then newest ───────────────── */
-  const sortedPosts = [
-    ...feedPosts.filter(
-      (p) => p.author_id === user.id || followedSet.has(p.author_id)
-    ),
-    ...feedPosts.filter(
-      (p) => p.author_id !== user.id && !followedSet.has(p.author_id)
-    ),
-  ];
+  /* ── Sort: own → followed → preferred-city clubs/promos → rest ── */
+  const profileLocationMap = Object.fromEntries(
+    (profiles ?? []).map((p) => [p.id, (p.location as string | null) ?? ""])
+  );
+
+  function scorePost(post: (typeof feedPosts)[0]): number {
+    let s = 0;
+    if (post.author_id === userId) s += 3000;
+    if (followedSet.has(post.author_id)) s += 1000;
+
+    if (preferredCities.length > 0) {
+      const loc = profileLocationMap[post.author_id]?.toLowerCase() ?? "";
+      const inCity = preferredCities.some((c) =>
+        loc.includes(c.toLowerCase().replace(/, \w+$/, "")) // match city name without state
+      );
+      if (inCity) {
+        s += 200;
+        if (post.type === "club") s += 150;
+        if (post.promotion_title) s += 100;
+      }
+    }
+
+    return s;
+  }
+
+  const sortedPosts = [...feedPosts].sort((a, b) => scorePost(b) - scorePost(a));
 
   return (
     <FeedClient
       initialPosts={sortedPosts}
-      currentUserId={user.id}
+      currentUserId={userId}
       role={role}
       currentUser={currentUser}
       followedIds={followedIds}

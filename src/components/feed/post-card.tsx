@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Heart, MoreHorizontal, Trash2, BadgeCheck } from "lucide-react";
+import { Heart, MoreHorizontal, Trash2, BadgeCheck, Ticket, CalendarClock } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,6 +22,31 @@ interface PostCardProps {
   onDelete?: (postId: string) => void;
 }
 
+/* ── Promo helpers ────────────────────────────────────────────── */
+
+function promoExpired(expiresAt: string): boolean {
+  return new Date(expiresAt) < new Date();
+}
+
+function formatExpiry(expiresAt: string): string {
+  const target = new Date(expiresAt);
+  const now = new Date();
+  const diffMs = target.getTime() - now.getTime();
+
+  if (diffMs <= 0) return "Expired";
+
+  const diffH = Math.ceil(diffMs / (1000 * 60 * 60));
+  if (diffH < 24) return `Expires in ${diffH}h`;
+
+  const diffD = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  if (diffD === 1) return "Expires tomorrow";
+  if (diffD <= 7) return `Expires in ${diffD}d`;
+
+  return `Expires ${target.toLocaleDateString(undefined, { month: "short", day: "numeric" })}`;
+}
+
+/* ── Component ────────────────────────────────────────────────── */
+
 export function PostCard({ post, currentUserId, onDelete }: PostCardProps) {
   const supabase = useMemo(() => createClient(), []);
   const [liked, setLiked] = useState(post.is_liked_by_me);
@@ -36,6 +61,10 @@ export function PostCard({ post, currentUserId, onDelete }: PostCardProps) {
     captionLong && !expanded
       ? post.caption!.slice(0, CAPTION_LIMIT).trimEnd() + "…"
       : post.caption;
+
+  const isPromo = post.type === "club" && !!post.promotion_title;
+  const expired = isPromo && !!post.expires_at && promoExpired(post.expires_at);
+  const expiryLabel = isPromo && post.expires_at ? formatExpiry(post.expires_at) : null;
 
   async function toggleLike() {
     const wasLiked = liked;
@@ -61,7 +90,12 @@ export function PostCard({ post, currentUserId, onDelete }: PostCardProps) {
   }
 
   return (
-    <article className="overflow-hidden rounded-2xl bg-card shadow-sm">
+    <article
+      className={cn(
+        "overflow-hidden rounded-2xl bg-card shadow-sm",
+        isPromo && "ring-1 ring-[var(--brand-red)]/20"
+      )}
+    >
       {/* ── Author header ───────────────────────────────────── */}
       <div className="flex items-center gap-3 px-4 py-3">
         <Link href={`/profile/${post.author.username}`} className="shrink-0">
@@ -125,21 +159,80 @@ export function PostCard({ post, currentUserId, onDelete }: PostCardProps) {
         )}
       </div>
 
-      {/* ── Image ───────────────────────────────────────────── */}
-      {!imgError ? (
-        <img
-          src={post.image_url}
-          alt={post.caption ?? "Post image"}
-          className="w-full object-cover"
-          style={{ maxHeight: "min(600px, 80vw)" }}
-          loading="lazy"
-          onError={() => setImgError(true)}
-        />
-      ) : (
-        <div className="flex h-48 w-full items-center justify-center bg-muted text-sm text-muted-foreground">
-          Image unavailable
+      {/* ── Promotion banner ────────────────────────────────── */}
+      {isPromo && (
+        <div
+          className={cn(
+            "flex items-center justify-between gap-3 border-y px-4 py-2.5",
+            expired
+              ? "border-border/60 bg-muted/40"
+              : "border-[var(--brand-red)]/20 bg-[var(--brand-red)]/6"
+          )}
+        >
+          {/* Title + icon */}
+          <div className="flex min-w-0 items-center gap-2">
+            <Ticket
+              className={cn(
+                "h-4 w-4 shrink-0",
+                expired ? "text-muted-foreground" : "text-[var(--brand-red)]"
+              )}
+            />
+            <span
+              className={cn(
+                "truncate text-sm font-bold tracking-tight",
+                expired && "text-muted-foreground line-through"
+              )}
+            >
+              {post.promotion_title}
+            </span>
+          </div>
+
+          {/* Expiry badge */}
+          {expiryLabel && (
+            <span
+              className={cn(
+                "shrink-0 flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium",
+                expired
+                  ? "bg-muted text-muted-foreground"
+                  : "bg-[var(--brand-red)]/10 text-[var(--brand-red)]"
+              )}
+            >
+              <CalendarClock className="h-3 w-3" />
+              {expiryLabel}
+            </span>
+          )}
         </div>
       )}
+
+      {/* ── Image ───────────────────────────────────────────── */}
+      <div className="relative">
+        {!imgError ? (
+          <img
+            src={post.image_url}
+            alt={post.promotion_title ?? post.caption ?? "Post image"}
+            className={cn(
+              "w-full object-cover",
+              expired && "opacity-50 grayscale-[40%]"
+            )}
+            style={{ maxHeight: "min(600px, 80vw)" }}
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="flex h-48 w-full items-center justify-center bg-muted text-sm text-muted-foreground">
+            Image unavailable
+          </div>
+        )}
+
+        {/* Expired overlay */}
+        {expired && !imgError && (
+          <div className="absolute inset-0 flex items-end justify-start p-3">
+            <span className="rounded-full bg-background/80 px-3 py-1 text-xs font-semibold text-muted-foreground backdrop-blur-sm">
+              Promotion ended
+            </span>
+          </div>
+        )}
+      </div>
 
       {/* ── Actions + Caption ───────────────────────────────── */}
       <div className="px-4 pb-4 pt-3 space-y-2">

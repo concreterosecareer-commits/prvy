@@ -12,6 +12,9 @@ import {
   MessageSquare,
   Gift,
   Loader2,
+  Building2,
+  Mail,
+  Phone,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,14 +24,18 @@ import { StatusDot } from "@/components/dashboard/status-dot";
 import { FollowButton, type FollowButtonStatus } from "@/components/follow/follow-button";
 import { FollowListModal } from "@/components/follow/follow-list-modal";
 import { PostCard } from "@/components/feed/post-card";
+import { TipModal } from "@/components/tip/tip-modal";
 import { createClient } from "@/lib/supabase/client";
 import type { FeedPost } from "@/types/feed";
 
-const STATUS_LABEL: Record<string, "Active" | "Away" | "Offline"> = {
-  active: "Active",
-  away: "Away",
+const STATUS_LABEL: Record<string, string> = {
+  active:  "Available",
+  working: "Working",
+  away:    "Available", // legacy
   offline: "Offline",
 };
+
+const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 interface ProfileData {
   id: string;
@@ -40,6 +47,9 @@ interface ProfileData {
   location: string | null;
   height: string | null;
   languages: string[] | null;
+  address: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
   rating: number;
   response_rate: number;
   patron_count: number;
@@ -60,12 +70,15 @@ export default function ProfilePage() {
 
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [userStatus, setUserStatus] = useState<"Active" | "Away" | "Offline">("Offline");
+  const [userStatus, setUserStatus] = useState("Offline");
+  const [workingDays, setWorkingDays] = useState<number[]>([]);
   const [followStatus, setFollowStatus] = useState<FollowButtonStatus>("none");
   const [followerCount, setFollowerCount] = useState(0);
   const [posts, setPosts] = useState<FeedPost[]>([]);
 
+  const [profileRole, setProfileRole] = useState<string>("patron");
   const [followModal, setFollowModal] = useState<"followers" | "following" | null>(null);
+  const [tipOpen, setTipOpen] = useState(false);
 
   const fetchedRef = useRef(false);
 
@@ -93,7 +106,7 @@ export default function ProfilePage() {
       const { data: targetProfile } = await supabase
         .from("profiles")
         .select(
-          "id, username, display_name, avatar_url, cover_url, bio, location, height, languages, rating, response_rate, patron_count, follower_count, following_count, earnings_total, is_verified, is_private"
+          "id, username, display_name, avatar_url, cover_url, bio, location, height, languages, address, contact_email, contact_phone, working_days, rating, response_rate, patron_count, follower_count, following_count, earnings_total, is_verified, is_private"
         )
         .eq("username", username)
         .single();
@@ -107,9 +120,11 @@ export default function ProfilePage() {
 
       setProfile(targetProfile as ProfileData);
       setFollowerCount(targetProfile.follower_count ?? 0);
+      const wd = (targetProfile as Record<string, unknown>).working_days;
+      if (Array.isArray(wd)) setWorkingDays(wd as number[]);
 
       const [{ data: targetUser }, { data: followRow }] = await Promise.all([
-        supabase.from("users").select("status").eq("id", targetProfile.id).single(),
+        supabase.from("users").select("status, role").eq("id", targetProfile.id).single(),
         supabase
           .from("follows")
           .select("status")
@@ -119,6 +134,7 @@ export default function ProfilePage() {
       ]);
 
       setUserStatus(STATUS_LABEL[targetUser?.status ?? "offline"] ?? "Offline");
+      setProfileRole(targetUser?.role ?? "patron");
 
       const fs: FollowButtonStatus = !followRow
         ? "none"
@@ -219,7 +235,11 @@ export default function ProfilePage() {
       .join("")
       .toUpperCase() || "?";
 
+  const isClub = profileRole === "club";
+
+  // Clubs are always public — never show the lock screen
   const isPrivateLocked =
+    !isClub &&
     profile.is_private &&
     followStatus !== "accepted" &&
     currentUserId !== profile.id;
@@ -263,12 +283,17 @@ export default function ProfilePage() {
                 {profile.is_verified && (
                   <BadgeCheck className="h-5 w-5 text-[var(--brand-red)]" />
                 )}
-                {profile.is_private && (
+                {isClub && (
+                  <span className="flex items-center gap-1 rounded-full bg-[var(--brand-red)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--brand-red)]">
+                    <Building2 className="h-3 w-3" /> Club
+                  </span>
+                )}
+                {!isClub && profile.is_private && (
                   <span className="flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
                     <Lock className="h-3 w-3" /> Private
                   </span>
                 )}
-                <StatusDot status={userStatus} />
+                {!isClub && <StatusDot status={userStatus} />}
               </div>
               <p className="text-sm text-muted-foreground">@{profile.username}</p>
               {profile.bio && !isPrivateLocked && (
@@ -287,14 +312,18 @@ export default function ProfilePage() {
                   isTargetPrivate={profile.is_private}
                   onStatusChange={handleFollowChange}
                 />
-                {!isPrivateLocked && (
+                {!isPrivateLocked && !isClub && (
                   <>
                     <Link href="/messages">
                       <Button variant="outline" className="gap-2">
                         <MessageSquare className="h-4 w-4" /> Message
                       </Button>
                     </Link>
-                    <Button variant="outline" className="gap-2">
+                    <Button
+                      variant="outline"
+                      className="gap-2"
+                      onClick={() => setTipOpen(true)}
+                    >
                       <Gift className="h-4 w-4" /> Send Tip
                     </Button>
                   </>
@@ -358,9 +387,9 @@ export default function ProfilePage() {
               <TabsTrigger value="posts">
                 Posts {posts.length > 0 && `(${posts.length})`}
               </TabsTrigger>
-              <TabsTrigger value="about">About</TabsTrigger>
-              <TabsTrigger value="rates">Rates</TabsTrigger>
-              <TabsTrigger value="availability">Availability</TabsTrigger>
+              <TabsTrigger value="about">{isClub ? "About" : "About"}</TabsTrigger>
+              {!isClub && <TabsTrigger value="rates">Rates</TabsTrigger>}
+              {!isClub && <TabsTrigger value="availability">Availability</TabsTrigger>}
             </TabsList>
 
             <TabsContent value="posts" className="mt-4">
@@ -384,67 +413,147 @@ export default function ProfilePage() {
               )}
             </TabsContent>
 
+            {/* About tab — club shows address + contact; others show bio/info */}
             <TabsContent value="about" className="mt-4">
-              <div className="grid gap-4 lg:grid-cols-[1fr_300px]">
-                <Card className="rounded-2xl border-none p-5 shadow-sm">
-                  <h2 className="mb-3 font-semibold">About Me</h2>
-                  <p className="text-sm text-muted-foreground">
-                    {profile.bio || "No bio yet."}
-                  </p>
-                </Card>
-                <Card className="rounded-2xl border-none p-5 shadow-sm">
-                  <h2 className="mb-3 font-semibold">Info</h2>
-                  <div className="space-y-3 text-sm">
-                    {profile.location && (
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <MapPin className="h-4 w-4 shrink-0" /> {profile.location}
-                      </div>
-                    )}
-                    {profile.languages?.[0] && (
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Globe className="h-4 w-4 shrink-0" />{" "}
-                        {profile.languages[0]}
-                      </div>
-                    )}
-                    {profile.height && (
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Ruler className="h-4 w-4 shrink-0" /> {profile.height}
-                      </div>
-                    )}
-                  </div>
-                </Card>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="rates" className="mt-4">
-              <Card className="rounded-2xl border-none p-5 shadow-sm">
-                <div className="divide-y text-sm">
-                  <div className="flex justify-between py-2">
-                    <span>Private Chat (1hr)</span>
-                    <span className="font-semibold">500 Gems</span>
-                  </div>
-                  <div className="flex justify-between py-2">
-                    <span>Video Call (30min)</span>
-                    <span className="font-semibold">1,200 Gems</span>
-                  </div>
-                  <div className="flex justify-between py-2">
-                    <span>Custom Content</span>
-                    <span className="font-semibold">From 800 Gems</span>
-                  </div>
+              {isClub ? (
+                <div className="grid gap-4 lg:grid-cols-[1fr_300px]">
+                  <Card className="rounded-2xl border-none p-5 shadow-sm">
+                    <h2 className="mb-3 font-semibold">Description</h2>
+                    <p className="text-sm text-muted-foreground">
+                      {profile.bio || "No description yet."}
+                    </p>
+                  </Card>
+                  <Card className="rounded-2xl border-none p-5 shadow-sm">
+                    <h2 className="mb-3 font-semibold">Contact &amp; Location</h2>
+                    <div className="space-y-3 text-sm">
+                      {profile.address && (
+                        <div className="flex items-start gap-2 text-muted-foreground">
+                          <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
+                          {profile.address}
+                        </div>
+                      )}
+                      {profile.contact_email && (
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Mail className="h-4 w-4 shrink-0" />
+                          <a
+                            href={`mailto:${profile.contact_email}`}
+                            className="hover:underline"
+                          >
+                            {profile.contact_email}
+                          </a>
+                        </div>
+                      )}
+                      {profile.contact_phone && (
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Phone className="h-4 w-4 shrink-0" />
+                          <a
+                            href={`tel:${profile.contact_phone}`}
+                            className="hover:underline"
+                          >
+                            {profile.contact_phone}
+                          </a>
+                        </div>
+                      )}
+                      {!profile.address && !profile.contact_email && !profile.contact_phone && (
+                        <p className="text-muted-foreground">No contact info yet.</p>
+                      )}
+                    </div>
+                  </Card>
                 </div>
-              </Card>
+              ) : (
+                <div className="grid gap-4 lg:grid-cols-[1fr_300px]">
+                  <Card className="rounded-2xl border-none p-5 shadow-sm">
+                    <h2 className="mb-3 font-semibold">About Me</h2>
+                    <p className="text-sm text-muted-foreground">
+                      {profile.bio || "No bio yet."}
+                    </p>
+                  </Card>
+                  <Card className="rounded-2xl border-none p-5 shadow-sm">
+                    <h2 className="mb-3 font-semibold">Info</h2>
+                    <div className="space-y-3 text-sm">
+                      {profile.location && (
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <MapPin className="h-4 w-4 shrink-0" /> {profile.location}
+                        </div>
+                      )}
+                      {profile.languages?.[0] && (
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Globe className="h-4 w-4 shrink-0" /> {profile.languages[0]}
+                        </div>
+                      )}
+                      {profile.height && (
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Ruler className="h-4 w-4 shrink-0" /> {profile.height}
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+                </div>
+              )}
             </TabsContent>
 
-            <TabsContent value="availability" className="mt-4">
-              <Card className="rounded-2xl border-none p-5 shadow-sm">
-                <p className="text-sm text-muted-foreground">
-                  {profile.display_name} is currently{" "}
-                  <StatusDot status={userStatus} className="inline-flex" />{" "}
-                  {userStatus.toLowerCase()} and typically responds within a few
-                  minutes.
-                </p>
-              </Card>
-            </TabsContent>
+            {!isClub && (
+              <TabsContent value="rates" className="mt-4">
+                <Card className="rounded-2xl border-none p-5 shadow-sm">
+                  <div className="divide-y text-sm">
+                    <div className="flex justify-between py-2">
+                      <span>Private Chat (1hr)</span>
+                      <span className="font-semibold">500 Gems</span>
+                    </div>
+                    <div className="flex justify-between py-2">
+                      <span>Video Call (30min)</span>
+                      <span className="font-semibold">1,200 Gems</span>
+                    </div>
+                    <div className="flex justify-between py-2">
+                      <span>Custom Content</span>
+                      <span className="font-semibold">From 800 Gems</span>
+                    </div>
+                  </div>
+                </Card>
+              </TabsContent>
+            )}
+
+            {!isClub && (
+              <TabsContent value="availability" className="mt-4">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {/* Status card */}
+                  <Card className="rounded-2xl border-none p-5 shadow-sm">
+                    <h2 className="mb-3 font-semibold">Status</h2>
+                    <div className="flex items-center gap-3">
+                      <StatusDot status={userStatus} />
+                    </div>
+                    <p className="mt-3 text-sm text-muted-foreground">
+                      {userStatus === "Working"
+                        ? `${profile.display_name} is currently working.`
+                        : userStatus === "Available"
+                        ? `${profile.display_name} is available and typically responds quickly.`
+                        : `${profile.display_name} is currently offline.`}
+                    </p>
+                  </Card>
+
+                  {/* Working days card — only shown when set */}
+                  {workingDays.length > 0 && (
+                    <Card className="rounded-2xl border-none p-5 shadow-sm">
+                      <h2 className="mb-3 font-semibold">Schedule</h2>
+                      <div className="flex flex-wrap gap-1.5">
+                        {DAYS.map((label, idx) => (
+                          <span
+                            key={idx}
+                            className={
+                              workingDays.includes(idx)
+                                ? "rounded-md bg-[var(--brand-red)]/10 px-2.5 py-1 text-xs font-semibold text-[var(--brand-red)]"
+                                : "rounded-md bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground/40"
+                            }
+                          >
+                            {label}
+                          </span>
+                        ))}
+                      </div>
+                    </Card>
+                  )}
+                </div>
+              </TabsContent>
+            )}
           </Tabs>
         )}
       </div>
@@ -469,6 +578,20 @@ export default function ProfilePage() {
             title={`Following · ${profile.following_count.toLocaleString()}`}
           />
         </>
+      )}
+
+      {/* Tip modal */}
+      {profile && !isClub && (
+        <TipModal
+          open={tipOpen}
+          onOpenChange={setTipOpen}
+          recipient={{
+            id:           profile.id,
+            display_name: profile.display_name,
+            username:     profile.username,
+            avatar_url:   profile.avatar_url,
+          }}
+        />
       )}
     </>
   );
