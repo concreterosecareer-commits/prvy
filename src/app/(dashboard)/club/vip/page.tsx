@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { ClubVIPClient } from "./club-vip-client";
+import { AnalyticsSubNav } from "@/components/dashboard/analytics-subnav";
 
 export default async function ClubVIPPage() {
   const supabase = await createClient();
@@ -15,5 +16,10 @@ export default async function ClubVIPPage() {
 
   if (userData?.role !== "club") redirect("/feed");
 
-  return <ClubVIPClient />;
+  return (
+    <>
+      <AnalyticsSubNav role="club" />
+      <ClubVIPClient />
+    </>
+  );
 }

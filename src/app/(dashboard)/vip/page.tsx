@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { EntertainerVIPClient } from "./entertainer-vip-client";
+import { AnalyticsSubNav } from "@/components/dashboard/analytics-subnav";
 
 export default async function VIPPage() {
   const supabase = await createClient();
@@ -15,5 +16,10 @@ export default async function VIPPage() {
 
   if (userData?.role !== "entertainer") redirect("/feed");
 
-  return <EntertainerVIPClient />;
+  return (
+    <>
+      <AnalyticsSubNav role="entertainer" />
+      <EntertainerVIPClient />
+    </>
+  );
 }

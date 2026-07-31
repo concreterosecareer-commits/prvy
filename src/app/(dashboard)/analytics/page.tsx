@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { EntertainerAnalyticsClient } from "./entertainer-analytics-client";
+import { AnalyticsSubNav } from "@/components/dashboard/analytics-subnav";
 
 export default async function AnalyticsPage() {
   const supabase = await createClient();
@@ -15,5 +16,10 @@ export default async function AnalyticsPage() {
 
   if (userData?.role !== "entertainer") redirect("/feed");
 
-  return <EntertainerAnalyticsClient />;
+  return (
+    <>
+      <AnalyticsSubNav role="entertainer" />
+      <EntertainerAnalyticsClient />
+    </>
+  );
 }

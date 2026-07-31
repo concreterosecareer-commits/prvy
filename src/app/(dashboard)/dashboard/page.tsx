@@ -11,6 +11,11 @@ import {
   Gem,
   BarChart3,
   Flame,
+  Images,
+  Trophy,
+  Gift,
+  Wallet,
+  Receipt,
 } from "lucide-react";
 import { MOCK_RECENT_ACTIVITY, MOCK_HOT_SPOTS } from "@/lib/mock-data";
 import { formatGems, formatUsd } from "@/lib/format";
@@ -28,12 +33,138 @@ export default async function DashboardPage() {
   const displayName = profile?.display_name ?? user?.email?.split("@")[0] ?? "there";
   const role = userData?.role ?? "patron";
   const isDancer = role === "entertainer";
+  const isClub   = role === "club";
 
   const gemBalance = wallet?.gem_balance ?? 1250;
   const usdBalance = wallet?.usd_balance ?? 1250;
-
   const unreadMessages = MOCK_RECENT_ACTIVITY.reduce((sum, m) => sum + m.unread, 0);
 
+  /* ── Club dashboard ──────────────────────────────────────────────────── */
+  if (isClub) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold">Welcome back, {displayName}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Your club overview for today.</p>
+        </div>
+
+        {/* Stat strip */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <StatCard
+            label="Revenue Today"
+            value={formatUsd(usdBalance)}
+            icon={TrendingUp}
+            trend="↑ 12.4% vs last week"
+          />
+          <StatCard
+            label="Active Entertainers"
+            value="8"
+            icon={Users}
+            trend="↑ 2 checked in today"
+            footer={
+              <Link href="/club/analytics">
+                <Button size="sm" className="w-full text-xs bg-[var(--brand-red)] text-white hover:bg-[var(--brand-red-dark)]">
+                  View Analytics
+                </Button>
+              </Link>
+            }
+          />
+          <StatCard
+            label="VIP Revenue"
+            value={formatUsd(4850)}
+            icon={Trophy}
+            trend="↑ 18% this week"
+            footer={
+              <Link href="/club/vip">
+                <Button size="sm" className="w-full text-xs bg-[var(--brand-red)] text-white hover:bg-[var(--brand-red-dark)]">
+                  VIP Breakdown
+                </Button>
+              </Link>
+            }
+          />
+        </div>
+
+        {/* Primary action */}
+        <Card
+          className="relative min-h-36 overflow-hidden rounded-2xl border-none p-6 shadow-sm"
+          style={{ background: "linear-gradient(135deg, var(--brand-red), var(--brand-red-dark))" }}
+        >
+          <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-white">
+              <p className="text-xs font-semibold uppercase tracking-widest text-white/60">Club</p>
+              <h2 className="mt-1 text-2xl font-bold">Manage Your Content</h2>
+              <p className="mt-1 text-sm text-white/70">Publish posts, promotions, and event updates.</p>
+            </div>
+            <div className="flex shrink-0 flex-wrap gap-3">
+              <Link href="/club/posts">
+                <Button className="bg-white text-[var(--brand-red)] hover:bg-white/90 font-semibold">
+                  <Images className="mr-2 h-4 w-4" />
+                  My Posts
+                </Button>
+              </Link>
+              <Link href="/club/analytics">
+                <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:text-white">
+                  <BarChart3 className="mr-2 h-4 w-4" />
+                  Analytics
+                </Button>
+              </Link>
+            </div>
+          </div>
+          <Images className="pointer-events-none absolute -right-4 -top-4 h-32 w-32 select-none text-white/5" />
+        </Card>
+
+        {/* Secondary: Recent Activity + Hot Spots */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <Card className="rounded-2xl border-none p-5 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="font-semibold">Recent Activity</h2>
+            </div>
+            <div className="space-y-4">
+              {MOCK_RECENT_ACTIVITY.map((item) => (
+                <div key={item.id} className="flex items-center gap-3">
+                  <Avatar className="h-9 w-9">
+                    {item.avatar && <AvatarImage src={item.avatar} alt={item.name} className="object-cover object-top" />}
+                    <AvatarFallback className="bg-[var(--brand-red)]/15 text-[var(--brand-red)]">
+                      {item.name[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{item.name}</p>
+                    <p className="truncate text-xs text-muted-foreground">{item.message}</p>
+                  </div>
+                  <span className="text-xs text-muted-foreground shrink-0">{item.time}</span>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Quick links for club */}
+          <Card className="rounded-2xl border-none p-5 shadow-sm">
+            <h2 className="mb-4 font-semibold">Quick Access</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { label: "My Posts",      href: "/club/posts",      icon: Images   },
+                { label: "Analytics",     href: "/club/analytics",  icon: BarChart3 },
+                { label: "VIP Bonus",     href: "/club/vip",        icon: Trophy   },
+                { label: "Settings",      href: "/settings",        icon: Users    },
+              ].map(({ label, href, icon: Icon }) => (
+                <Link key={href} href={href}>
+                  <div className="flex items-center gap-3 rounded-xl border border-white/[0.06] p-3 transition hover:bg-accent cursor-pointer">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-red)]/10">
+                      <Icon className="h-4 w-4 text-[var(--brand-red)]" />
+                    </div>
+                    <span className="text-sm font-medium">{label}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Entertainer + Patron dashboard ─────────────────────────────────── */
   return (
     <div className="space-y-6">
       <div>
@@ -43,7 +174,7 @@ export default async function DashboardPage() {
         <p className="mt-1 text-sm text-muted-foreground">Here&apos;s your activity overview.</p>
       </div>
 
-      {/* Zone 1 — Stat strip (3 cards max) */}
+      {/* Zone 1 — Stat strip */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <StatCard
           label="Gem Balance"
@@ -52,7 +183,7 @@ export default async function DashboardPage() {
           sub={`${formatUsd(usdBalance)} USD`}
           footer={
             isDancer ? (
-              <Link href="/transactions">
+              <Link href="/wallet">
                 <Button size="sm" className="w-full bg-[var(--brand-red)] text-white hover:bg-[var(--brand-red-dark)]">
                   Check Income
                 </Button>
@@ -104,7 +235,7 @@ export default async function DashboardPage() {
         />
       </div>
 
-      {/* Zone 2 — Primary action card */}
+      {/* Zone 2 — Primary action */}
       {isDancer ? (
         <Card
           className="relative min-h-36 overflow-hidden rounded-2xl border-none p-6 shadow-sm"
@@ -167,10 +298,10 @@ export default async function DashboardPage() {
 
       {/* Zone 3 — Secondary content */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Left: Recent Activity */}
+        {/* Recent Activity / Messages */}
         <Card className="rounded-2xl border-none p-5 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-semibold">Recent Activity</h2>
+            <h2 className="font-semibold">Recent Messages</h2>
             <Link href="/messages" className="text-xs font-medium text-[var(--brand-red)] hover:underline">
               View All
             </Link>
@@ -201,43 +332,68 @@ export default async function DashboardPage() {
           </div>
         </Card>
 
-        {/* Right: Hot Spots */}
-        <Card className="rounded-2xl border-none p-5 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Flame className="h-4 w-4 text-[var(--brand-red)]" />
-              <h2 className="font-semibold">Hot Spots</h2>
-            </div>
-            <Link href="/hot-spots" className="text-xs font-medium text-[var(--brand-red)] hover:underline">
-              View All
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            {MOCK_HOT_SPOTS.slice(0, 4).map((spot) => (
-              <Link key={spot.id} href={`/hot-spots/${spot.id}`} className="group overflow-hidden rounded-xl">
-                <div
-                  className="relative flex h-24 items-end overflow-hidden p-3"
-                  style={{ background: spot.gradient }}
-                >
-                  {"image" in spot && spot.image && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={spot.image as string}
-                      alt=""
-                      aria-hidden
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  )}
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(to top, oklch(0.08 0.01 25 / 90%) 0%, oklch(0.08 0.01 25 / 30%) 60%, transparent 100%)" }} />
-                  <div className="relative z-10">
-                    <p className="text-xs font-semibold text-white">{spot.name}</p>
-                    <p className="text-[11px] text-white/70">{spot.location}</p>
+        {/* Right: Hot Spots or Quick Links */}
+        {isDancer ? (
+          /* Dancer: Quick Links (Wallet, Transactions, VIP, Invite) */
+          <Card className="rounded-2xl border-none p-5 shadow-sm">
+            <h2 className="mb-4 font-semibold">Quick Access</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { label: "Wallet",       href: "/wallet",       icon: Wallet   },
+                { label: "Transactions", href: "/transactions", icon: Receipt  },
+                { label: "VIP Bonus",    href: "/vip",          icon: Trophy   },
+                { label: "Invite & Earn", href: "/invite-earn", icon: Gift     },
+              ].map(({ label, href, icon: Icon }) => (
+                <Link key={href} href={href}>
+                  <div className="flex items-center gap-3 rounded-xl border border-white/[0.06] p-3 transition hover:bg-accent cursor-pointer">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-red)]/10">
+                      <Icon className="h-4 w-4 text-[var(--brand-red)]" />
+                    </div>
+                    <span className="text-sm font-medium">{label}</span>
                   </div>
-                </div>
+                </Link>
+              ))}
+            </div>
+          </Card>
+        ) : (
+          /* Patron: Hot Spots */
+          <Card className="rounded-2xl border-none p-5 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Flame className="h-4 w-4 text-[var(--brand-red)]" />
+                <h2 className="font-semibold">Hot Spots</h2>
+              </div>
+              <Link href="/hot-spots" className="text-xs font-medium text-[var(--brand-red)] hover:underline">
+                View All
               </Link>
-            ))}
-          </div>
-        </Card>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {MOCK_HOT_SPOTS.slice(0, 4).map((spot) => (
+                <Link key={spot.id} href={`/hot-spots/${spot.id}`} className="group overflow-hidden rounded-xl">
+                  <div
+                    className="relative flex h-24 items-end overflow-hidden p-3"
+                    style={{ background: spot.gradient }}
+                  >
+                    {"image" in spot && spot.image && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={spot.image as string}
+                        alt=""
+                        aria-hidden
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    )}
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(to top, oklch(0.08 0.01 25 / 90%) 0%, oklch(0.08 0.01 25 / 30%) 60%, transparent 100%)" }} />
+                    <div className="relative z-10">
+                      <p className="text-xs font-semibold text-white">{spot.name}</p>
+                      <p className="text-[11px] text-white/70">{spot.location}</p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </Card>
+        )}
       </div>
     </div>
   );

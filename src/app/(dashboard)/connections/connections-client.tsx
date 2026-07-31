@@ -4,7 +4,8 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   Search, MessageSquare, MoreVertical, MapPin,
-  ArrowUpDown, Check, X, UserPlus,
+  ArrowUpDown, Check, X, UserPlus, Newspaper,
+  Compass, Users, ArrowRight,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -49,7 +50,6 @@ function DancerCard({ d }: { d: typeof MOCK_CONNECTIONS[0] }) {
 
   return (
     <Card className="overflow-hidden rounded-2xl border-none shadow-sm transition hover:shadow-md">
-      {/* Gradient header band with floating round avatar */}
       <div className="relative flex h-20 items-end justify-center" style={{ background: gradient }}>
         <span className="pointer-events-none absolute right-3 top-1 select-none text-5xl font-black leading-none text-white/10">
           {d.name[0]}
@@ -59,8 +59,6 @@ function DancerCard({ d }: { d: typeof MOCK_CONNECTIONS[0] }) {
           <img src={d.avatar} alt={d.name} className="h-full w-full rounded-full object-cover object-top" />
         </Avatar>
       </div>
-
-      {/* Card body */}
       <div className="px-4 pb-4 pt-9 text-center">
         <Link href={`/profile/${d.username}`} className="text-sm font-semibold hover:underline">
           {d.name}
@@ -69,7 +67,6 @@ function DancerCard({ d }: { d: typeof MOCK_CONNECTIONS[0] }) {
         <div className="mt-1 flex justify-center">
           <StatusDot status={d.status} />
         </div>
-
         <div className="mt-3 flex justify-center gap-6 text-center">
           <div>
             <p className="text-sm font-bold">{formatUsd(d.earnings)}</p>
@@ -80,7 +77,6 @@ function DancerCard({ d }: { d: typeof MOCK_CONNECTIONS[0] }) {
             <p className="text-[11px] text-muted-foreground">Patrons</p>
           </div>
         </div>
-
         <div className="mt-4 flex flex-col gap-2">
           <div className="flex gap-2">
             <Link href="/messages" className="flex-1">
@@ -93,9 +89,7 @@ function DancerCard({ d }: { d: typeof MOCK_CONNECTIONS[0] }) {
             </Button>
           </div>
           <Link href={`/profile/${d.username}`}>
-            <Button size="sm" variant="outline" className="w-full">
-              View Profile
-            </Button>
+            <Button size="sm" variant="outline" className="w-full">View Profile</Button>
           </Link>
         </div>
       </div>
@@ -112,21 +106,17 @@ function PatronRow({ p }: { p: typeof MOCK_PATRON_CONNECTIONS[0] }) {
           {p.name[0]}
         </AvatarFallback>
       </Avatar>
-
       <div className="min-w-0 flex-1">
         <Link href={`/profile/${p.username}`} className="text-sm font-semibold hover:underline">
           {p.name}
         </Link>
         <p className="text-xs text-muted-foreground">@{p.username}</p>
       </div>
-
       <div className="flex items-center gap-1 text-xs text-muted-foreground">
         <MapPin className="h-3 w-3 shrink-0" />
         {p.location}
       </div>
-
       <StatusDot status={p.status} />
-
       <div className="flex items-center gap-1">
         <Link href="/messages">
           <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -158,13 +148,11 @@ function InviteCard({
           {invite.name[0]}
         </AvatarFallback>
       </Avatar>
-
       <div className="min-w-0 flex-1">
         <p className="text-sm font-semibold">{invite.name}</p>
         <p className="text-xs text-muted-foreground">@{invite.username} · {invite.time}</p>
         <p className="mt-0.5 truncate text-xs text-muted-foreground italic">&ldquo;{invite.message}&rdquo;</p>
       </div>
-
       <div className="flex shrink-0 items-center gap-2">
         <Button
           size="sm"
@@ -186,84 +174,182 @@ function InviteCard({
   );
 }
 
+/* ─── Feed entry point ───────────────────────────────────────── */
+function FeedEntry() {
+  return (
+    <div className="space-y-4">
+      {/* Hero CTA */}
+      <Card
+        className="relative overflow-hidden rounded-2xl border-none p-6"
+        style={{ background: "linear-gradient(135deg, var(--brand-red), var(--brand-red-dark))" }}
+      >
+        <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-white">
+            <p className="text-xs font-semibold uppercase tracking-widest text-white/60">Social</p>
+            <h2 className="mt-1 text-xl font-bold">Your Feed</h2>
+            <p className="mt-1 text-sm text-white/70">
+              See the latest posts and updates from people you follow.
+            </p>
+          </div>
+          <Link href="/feed" className="shrink-0">
+            <Button className="bg-white text-[var(--brand-red)] hover:bg-white/90 font-semibold gap-2">
+              <Newspaper className="h-4 w-4" />
+              Open Feed
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+        <Newspaper className="pointer-events-none absolute -right-4 -top-2 h-32 w-32 select-none text-white/5" />
+      </Card>
+
+      {/* Quick links */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        {[
+          { label: "Following",  count: "24 people",  href: "/feed" },
+          { label: "Followers",  count: "138 people", href: "/feed" },
+          { label: "Posts",      count: "12 total",   href: "/feed" },
+        ].map(({ label, count, href }) => (
+          <Link key={label} href={href}>
+            <Card className="rounded-xl border-none p-4 shadow-sm transition hover:bg-accent cursor-pointer">
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">{label}</p>
+              <p className="mt-1 text-lg font-bold">{count}</p>
+            </Card>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Discover entry point ───────────────────────────────────── */
+function DiscoverEntry({ isDancer }: { isDancer: boolean }) {
+  return (
+    <div className="space-y-4">
+      {/* Hero CTA */}
+      <Card
+        className="relative overflow-hidden rounded-2xl border-none p-6"
+        style={{ background: "linear-gradient(135deg, oklch(0.22 0.04 260), oklch(0.14 0.01 25))" }}
+      >
+        <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-white">
+            <p className="text-xs font-semibold uppercase tracking-widest text-white/60">Explore</p>
+            <h2 className="mt-1 text-xl font-bold">
+              {isDancer ? "Find Patrons" : "Discover Entertainers"}
+            </h2>
+            <p className="mt-1 text-sm text-white/70">
+              {isDancer
+                ? "Browse patrons in your area and grow your network."
+                : "Browse curated profiles and connect privately."}
+            </p>
+          </div>
+          <Link href="/discover" className="shrink-0">
+            <Button className="bg-white text-foreground hover:bg-white/90 font-semibold gap-2">
+              <Compass className="h-4 w-4" />
+              Explore
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+        <Compass className="pointer-events-none absolute -right-4 -top-2 h-32 w-32 select-none text-white/5" />
+      </Card>
+
+      {/* Featured profiles preview using existing connection mock data */}
+      <div>
+        <p className="mb-3 text-sm font-medium text-muted-foreground">Suggested for you</p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {MOCK_CONNECTIONS.slice(0, 3).map((d) => (
+            <DancerCard key={d.id} d={d} />
+          ))}
+        </div>
+        <div className="mt-4 text-center">
+          <Link href="/discover">
+            <Button variant="outline" className="gap-2">
+              View All <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Main client component ──────────────────────────────────── */
 export function ConnectionsClient({ isDancer }: { isDancer: boolean }) {
   const [search, setSearch] = useState("");
-  const [sortKey, setSortKey] = useState<SortKey>(isDancer ? "name" : "name");
+  const [sortKey, setSortKey] = useState<SortKey>("name");
   const [invites, setInvites] = useState(MOCK_INVITES);
 
   const dancerSortOptions: SortKey[] = ["name", "status", "earnings", "patrons"];
   const patronSortOptions: SortKey[] = ["name", "status", "location"];
   const sortOptions = isDancer ? patronSortOptions : dancerSortOptions;
 
-  /* Filtered + sorted dancers (patron view) */
   const filteredDancers = useMemo(() => {
     const q = search.toLowerCase();
-    const list = MOCK_CONNECTIONS.filter(
-      (d) => d.name.toLowerCase().includes(q) || d.username.toLowerCase().includes(q)
-    );
-    return list.sort((a, b) => {
-      if (sortKey === "name")     return a.name.localeCompare(b.name);
-      if (sortKey === "status")   return (STATUS_ORDER[a.status] ?? 9) - (STATUS_ORDER[b.status] ?? 9);
-      if (sortKey === "earnings") return b.earnings - a.earnings;
-      if (sortKey === "patrons")  return b.patrons - a.patrons;
-      return 0;
-    });
+    return MOCK_CONNECTIONS
+      .filter((d) => d.name.toLowerCase().includes(q) || d.username.toLowerCase().includes(q))
+      .sort((a, b) => {
+        if (sortKey === "name")     return a.name.localeCompare(b.name);
+        if (sortKey === "status")   return (STATUS_ORDER[a.status] ?? 9) - (STATUS_ORDER[b.status] ?? 9);
+        if (sortKey === "earnings") return b.earnings - a.earnings;
+        if (sortKey === "patrons")  return b.patrons - a.patrons;
+        return 0;
+      });
   }, [search, sortKey]);
 
-  /* Filtered + sorted patrons (dancer view) */
   const filteredPatrons = useMemo(() => {
     const q = search.toLowerCase();
-    const list = MOCK_PATRON_CONNECTIONS.filter(
-      (p) => p.name.toLowerCase().includes(q) || p.username.toLowerCase().includes(q) || p.location.toLowerCase().includes(q)
-    );
-    return list.sort((a, b) => {
-      if (sortKey === "name")     return a.name.localeCompare(b.name);
-      if (sortKey === "status")   return (STATUS_ORDER[a.status] ?? 9) - (STATUS_ORDER[b.status] ?? 9);
-      if (sortKey === "location") return a.location.localeCompare(b.location);
-      return 0;
-    });
+    return MOCK_PATRON_CONNECTIONS
+      .filter((p) => p.name.toLowerCase().includes(q) || p.username.toLowerCase().includes(q) || p.location.toLowerCase().includes(q))
+      .sort((a, b) => {
+        if (sortKey === "name")     return a.name.localeCompare(b.name);
+        if (sortKey === "status")   return (STATUS_ORDER[a.status] ?? 9) - (STATUS_ORDER[b.status] ?? 9);
+        if (sortKey === "location") return a.location.localeCompare(b.location);
+        return 0;
+      });
   }, [search, sortKey]);
 
-  function handleAccept(id: string) {
-    setInvites((prev) => prev.filter((inv) => inv.id !== id));
-  }
-  function handleDecline(id: string) {
-    setInvites((prev) => prev.filter((inv) => inv.id !== id));
-  }
+  function handleAccept(id: string) { setInvites((prev) => prev.filter((inv) => inv.id !== id)); }
+  function handleDecline(id: string) { setInvites((prev) => prev.filter((inv) => inv.id !== id)); }
 
   return (
-    <Tabs defaultValue="all" className="space-y-0">
-      {/* ── Sticky filter bar ─────────────────────────────────── */}
+    <Tabs defaultValue="people" className="space-y-0">
+      {/* ── Tab bar ───────────────────────────────────────────── */}
       <div className="sticky top-0 z-10 -mx-1 bg-background/95 pb-4 pt-1 backdrop-blur">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <TabsList>
-              <TabsTrigger value="all">
-                {isDancer ? "My Patrons" : "All Entertainers"}
-              </TabsTrigger>
-              <TabsTrigger value="invitations" className="relative">
-                Invitations
-                {invites.length > 0 && (
-                  <span className="ml-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--brand-red)] px-1 text-[10px] font-semibold text-white">
-                    {invites.length}
-                  </span>
-                )}
-              </TabsTrigger>
-            </TabsList>
-          </div>
+          <TabsList>
+            <TabsTrigger value="people">
+              <Users className="mr-1.5 h-3.5 w-3.5" />
+              {isDancer ? "My Patrons" : "Entertainers"}
+            </TabsTrigger>
+            <TabsTrigger value="feed">
+              <Newspaper className="mr-1.5 h-3.5 w-3.5" />
+              Feed
+            </TabsTrigger>
+            <TabsTrigger value="discover">
+              <Compass className="mr-1.5 h-3.5 w-3.5" />
+              Discover
+            </TabsTrigger>
+            <TabsTrigger value="invitations" className="relative">
+              Invitations
+              {invites.length > 0 && (
+                <span className="ml-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--brand-red)] px-1 text-[10px] font-semibold text-white">
+                  {invites.length}
+                </span>
+              )}
+            </TabsTrigger>
+          </TabsList>
 
+          {/* Search + sort (shown only on people tab) */}
           <div className="flex items-center gap-2">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder={isDancer ? "Search patrons..." : "Search entertainers..."}
-                className="h-9 w-56 pl-9 text-sm"
+                placeholder={isDancer ? "Search patrons…" : "Search entertainers…"}
+                className="h-9 w-48 pl-9 text-sm"
               />
             </div>
-
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="h-9 gap-1.5 px-3">
@@ -273,11 +359,7 @@ export function ConnectionsClient({ isDancer }: { isDancer: boolean }) {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 {sortOptions.map((key) => (
-                  <DropdownMenuItem
-                    key={key}
-                    onClick={() => setSortKey(key)}
-                    className="gap-2"
-                  >
+                  <DropdownMenuItem key={key} onClick={() => setSortKey(key)} className="gap-2">
                     {sortKey === key && <Check className="h-3.5 w-3.5 text-[var(--brand-red)]" />}
                     <span className={sortKey !== key ? "pl-5" : ""}>{sortLabel(key)}</span>
                   </DropdownMenuItem>
@@ -288,35 +370,39 @@ export function ConnectionsClient({ isDancer }: { isDancer: boolean }) {
         </div>
       </div>
 
-      {/* ── All tab ───────────────────────────────────────────── */}
-      <TabsContent value="all" className="mt-0">
+      {/* ── People tab ────────────────────────────────────────── */}
+      <TabsContent value="people" className="mt-0">
         {isDancer ? (
-          /* Patron list */
           <Card className="rounded-2xl border-none p-4 shadow-sm">
             {filteredPatrons.length === 0 ? (
               <p className="py-8 text-center text-sm text-muted-foreground">No patrons found.</p>
             ) : (
               <div className="space-y-1">
-                {filteredPatrons.map((p) => (
-                  <PatronRow key={p.id} p={p} />
-                ))}
+                {filteredPatrons.map((p) => <PatronRow key={p.id} p={p} />)}
               </div>
             )}
           </Card>
         ) : (
-          /* Dancer card grid */
           <>
             {filteredDancers.length === 0 ? (
               <p className="py-8 text-center text-sm text-muted-foreground">No entertainers found.</p>
             ) : (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredDancers.map((d) => (
-                  <DancerCard key={d.id} d={d} />
-                ))}
+                {filteredDancers.map((d) => <DancerCard key={d.id} d={d} />)}
               </div>
             )}
           </>
         )}
+      </TabsContent>
+
+      {/* ── Feed tab ──────────────────────────────────────────── */}
+      <TabsContent value="feed" className="mt-0">
+        <FeedEntry />
+      </TabsContent>
+
+      {/* ── Discover tab ──────────────────────────────────────── */}
+      <TabsContent value="discover" className="mt-0">
+        <DiscoverEntry isDancer={isDancer} />
       </TabsContent>
 
       {/* ── Invitations tab ───────────────────────────────────── */}
@@ -333,12 +419,7 @@ export function ConnectionsClient({ isDancer }: { isDancer: boolean }) {
           ) : (
             <div className="space-y-1">
               {invites.map((inv) => (
-                <InviteCard
-                  key={inv.id}
-                  invite={inv}
-                  onAccept={handleAccept}
-                  onDecline={handleDecline}
-                />
+                <InviteCard key={inv.id} invite={inv} onAccept={handleAccept} onDecline={handleDecline} />
               ))}
             </div>
           )}

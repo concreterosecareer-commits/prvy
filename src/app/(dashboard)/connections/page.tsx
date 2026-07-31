@@ -16,13 +16,11 @@ export default async function ConnectionsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">
-          {isDancer ? "My Patrons" : "Discover Entertainers"}
-        </h1>
+        <h1 className="text-2xl font-bold">Connections</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           {isDancer
-            ? "Manage your patron relationships and review incoming invitations."
-            : "Browse entertainers, sort by earnings or activity, and connect privately."}
+            ? "Your patrons, feed, and discovery — all in one place."
+            : "Browse entertainers, follow your feed, and manage connections."}
         </p>
       </div>
 

@@ -27,7 +27,19 @@
       "PowerShell($bytes = [System.IO.File]::ReadAllBytes\\(\"C:\\\\Users\\\\ASUS PC\\\\Documents\\\\Prvy\\\\public\\\\logo-wide.png\"\\); $w = [BitConverter]::ToUInt32\\([byte[]]\\($bytes[19],$bytes[18],$bytes[17],$bytes[16]\\),0\\); $h = [BitConverter]::ToUInt32\\([byte[]]\\($bytes[23],$bytes[22],$bytes[21],$bytes[20]\\),0\\); \"Width: $w, Height: $h, Ratio: $\\([math]::Round\\($w/$h,2\\)\\)\")",
       "PowerShell(cd \"C:\\\\Users\\\\ASUS PC\\\\Documents\\\\Prvy\" ; ls node_modules | Where-Object { $_.Name -eq \"emoji-picker-react\" })",
       "PowerShell(netstat -ano)",
-      "Bash(node -e \"const p = require\\('C:/Users/ASUS PC/Documents/Prvy/package.json'\\); console.log\\('react:', p.dependencies.react, 'next:', p.dependencies.next\\)\")"
+      "Bash(node -e \"const p = require\\('C:/Users/ASUS PC/Documents/Prvy/package.json'\\); console.log\\('react:', p.dependencies.react, 'next:', p.dependencies.next\\)\")",
+      "mcp__17bd3e38-e028-4ccb-a66d-5dc3100e123b__list_projects",
+      "mcp__17bd3e38-e028-4ccb-a66d-5dc3100e123b__restore_project",
+      "mcp__17bd3e38-e028-4ccb-a66d-5dc3100e123b__get_project",
+      "Bash(grep -v \"//.*prvy\")",
+      "Bash(powershell -Command \"\\(Get-Content 'PRVY_User_Manual.txt'\\) -replace 'PRVY', 'PRIVY' | Set-Content 'PRVY_User_Manual.txt'\")",
+      "Skill(artifact-design)",
+      "Skill(artifact-design:*)",
+      "PowerShell(head -100)",
+      "PowerShell(git add src/app/\\(dashboard\\)/account/page.tsx src/app/\\(dashboard\\)/feed/page.tsx \"src/app/\\(dashboard\\)/profile/[username]/page.tsx\" src/app/\\(dashboard\\)/transactions/page.tsx src/app/globals.css src/app/layout.tsx src/components/dashboard/sidebar-nav.tsx src/components/dashboard/status-dot.tsx src/components/feed/post-card.tsx src/components/feed/post-composer.tsx src/lib/nav.ts src/types/database.ts \"src/app/\\(dashboard\\)/club/\" \"src/app/\\(dashboard\\)/discover/\" src/components/locations/ src/components/tip/ supabase/migrations/)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }
