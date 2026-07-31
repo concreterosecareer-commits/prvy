@@ -1,5 +1,6 @@
 import {
   LayoutDashboard,
+  Newspaper,
   Users,
   BarChart3,
   Settings,
@@ -35,6 +36,7 @@ export interface NavItem {
  */
 export const PRIMARY_NAV: NavItem[] = [
   { label: "Dashboard",   href: "/dashboard",      icon: LayoutDashboard },
+  { label: "Feed",        href: "/feed",            icon: Newspaper,      clubHidden: true },
   { label: "Connections", href: "/connections",     icon: Users,          clubHidden: true },
   { label: "Hot Spots",   href: "/hot-spots",       icon: HotSpotsIcon,   clubHidden: true },
   // Analytics routes differ by role — both show as "Analytics" in the sidebar
