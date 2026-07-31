@@ -10,6 +10,7 @@ import {
   Receipt,
   Gift,
   BarChart3,
+  Trophy,
   Bell,
   Settings,
   HelpCircle,
@@ -39,6 +40,7 @@ export const PRIMARY_NAV: NavItem[] = [
   // Club-only: publish and browse their own promotional posts
   { label: "My Posts", href: "/club/posts", icon: Images, clubOnly: true },
   { label: "Analytics", href: "/club/analytics", icon: BarChart3, clubOnly: true },
+  { label: "VIP Bonus", href: "/club/vip",       icon: Trophy,   clubOnly: true },
   // Hidden for clubs (no messaging, connections, payments, referrals, analytics)
   { label: "Messages", href: "/messages", icon: MessageSquare, clubHidden: true },
   { label: "Connections", href: "/connections", icon: Users, clubHidden: true },
@@ -49,6 +51,7 @@ export const PRIMARY_NAV: NavItem[] = [
   { label: "Transactions", href: "/transactions", icon: Receipt, patronOnly: true, clubHidden: true },
   { label: "Invite & Earn", href: "/invite-earn", icon: Gift, dancerOnly: true },
   { label: "Analytics", href: "/analytics", icon: BarChart3, dancerOnly: true },
+  { label: "VIP Bonus", href: "/vip",       icon: Trophy,   dancerOnly: true },
   { label: "Notifications", href: "/notifications", icon: Bell },
   { label: "Settings", href: "/settings", icon: Settings },
   { label: "Support", href: "/support", icon: HelpCircle },
