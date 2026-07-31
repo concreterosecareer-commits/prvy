@@ -38,6 +38,7 @@ export const PRIMARY_NAV: NavItem[] = [
   { label: "Discover", href: "/discover", icon: Compass },
   // Club-only: publish and browse their own promotional posts
   { label: "My Posts", href: "/club/posts", icon: Images, clubOnly: true },
+  { label: "Analytics", href: "/club/analytics", icon: BarChart3, clubOnly: true },
   // Hidden for clubs (no messaging, connections, payments, referrals, analytics)
   { label: "Messages", href: "/messages", icon: MessageSquare, clubHidden: true },
   { label: "Connections", href: "/connections", icon: Users, clubHidden: true },
