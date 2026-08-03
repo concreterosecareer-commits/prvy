@@ -24,23 +24,13 @@ export function SidebarNav({ unreadCounts, role }: SidebarNavProps) {
   return (
     <div
       className="relative flex h-full flex-col overflow-hidden text-white"
-      style={{ background: "linear-gradient(90deg, oklch(0.28 0.15 25) 0%, oklch(0.16 0.01 25) 100%)" }}
+      style={{
+        backgroundImage: "url('/Menu backround.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
-      {/* Subtle geometric pattern overlay */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-0"
-        style={{
-          backgroundImage: "url('/curtain-pattern.svg')",
-          backgroundSize: "200px 200px",
-          backgroundRepeat: "repeat",
-          opacity: 0.09,
-          mixBlendMode: "screen",
-        }}
-      />
-
-      {/* All content sits above the pattern */}
-      <div className="relative z-10 flex h-full flex-col">
+      <div className="flex h-full flex-col">
         <div className="flex flex-col items-center px-6 py-6">
           <Logo height={108} />
           <p className="mt-2 text-[11px] leading-none text-white/40">
