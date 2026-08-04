@@ -17,7 +17,7 @@ export function StatCard({ label, value, icon: Icon, trend, trendPositive = true
     <Card className="flex flex-col rounded-2xl border-none p-5 shadow-sm">
       <div className="flex items-center justify-between">
         <p className="text-lg font-bold">{label}</p>
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-[var(--brand-red)]/70 bg-transparent text-[var(--brand-red)]">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-white/40 bg-transparent text-white">
           <Icon className="h-8 w-8" />
         </div>
       </div>
