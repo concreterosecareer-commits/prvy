@@ -25,7 +25,7 @@ export function SidebarNav({ unreadCounts, role }: SidebarNavProps) {
     <div
       className="relative flex h-full flex-col overflow-hidden text-white"
       style={{
-        backgroundImage: "url('/Menu backround.png')",
+        backgroundImage: "url('/sidebar-bg.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
