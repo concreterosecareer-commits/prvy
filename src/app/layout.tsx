@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Open_Sans, Montserrat } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
+import { PageTransition } from "@/components/page-transition";
 import "./globals.css";
 
 const openSans = Open_Sans({
@@ -53,7 +54,9 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          {children}
+          <PageTransition>
+            {children}
+          </PageTransition>
           <Toaster position="top-right" />
         </ThemeProvider>
       </body>
