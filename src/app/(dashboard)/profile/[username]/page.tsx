@@ -257,7 +257,7 @@ export default function ProfilePage() {
                 ? { background: `url(${profile.cover_url}) center/cover no-repeat` }
                 : {
                     background:
-                      "linear-gradient(135deg, oklch(0.48 0.24 295 / 70%), oklch(0.16 0.01 295))",
+                      "linear-gradient(135deg, #341539b3, oklch(0.13 0.018 308))",
                   }
             }
           />

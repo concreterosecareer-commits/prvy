@@ -29,16 +29,16 @@ import { TrendingUp, TrendingDown, ChevronDown, ChevronRight } from "lucide-reac
 
 // ── Color tokens (literal oklch values — recharts can't read CSS vars) ──
 const C = {
-  red:   "oklch(0.48 0.24 295)",
-  c2:    "oklch(0.65 0.18 310)",
-  c3:    "oklch(0.40 0.15 280)",
-  c4:    "oklch(0.72 0.10 295)",
-  c5:    "oklch(0.30 0.06 295)",
+  red:   "#341539",
+  c2:    "oklch(0.60 0.18 312)",
+  c3:    "oklch(0.38 0.14 280)",
+  c4:    "oklch(0.68 0.10 308)",
+  c5:    "oklch(0.26 0.06 308)",
   grid:  "oklch(0.95 0 0 / 6%)",
-  card:  "oklch(0.17 0.008 295)",
-  bg:    "oklch(0.12 0.008 295)",
-  fg:    "oklch(0.95 0.003 295)",
-  muted: "oklch(0.54 0.006 295)",
+  card:  "oklch(0.15 0.018 308)",
+  bg:    "oklch(0.10 0.018 308)",
+  fg:    "oklch(0.95 0.004 308)",
+  muted: "oklch(0.52 0.010 308)",
 };
 
 const ENT_COLORS = [C.red, C.c2, C.c3, C.c4, C.c5];

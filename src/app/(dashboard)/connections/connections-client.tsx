@@ -39,12 +39,12 @@ function sortLabel(key: SortKey) {
 /* ─── Dancer card (patron view) ─────────────────────────────── */
 function DancerCard({ d }: { d: typeof MOCK_CONNECTIONS[0] }) {
   const gradients = [
-    "linear-gradient(135deg, oklch(0.40 0.24 295 / 0.9), oklch(0.16 0.01 295))",
-    "linear-gradient(135deg, oklch(0.35 0.18 290 / 0.9), oklch(0.16 0.01 295))",
+    "linear-gradient(135deg, #341539e6, oklch(0.13 0.018 308))",
+    "linear-gradient(135deg, oklch(0.35 0.18 290 / 0.9), oklch(0.13 0.018 308))",
     "linear-gradient(135deg, oklch(0.50 0.06 240 / 0.9), oklch(0.20 0.02 240))",
     "linear-gradient(135deg, oklch(0.45 0.15 160 / 0.9), oklch(0.18 0.02 160))",
-    "linear-gradient(135deg, oklch(0.38 0.20 55 / 0.9),  oklch(0.16 0.01 295))",
-    "linear-gradient(135deg, oklch(0.42 0.18 320 / 0.9), oklch(0.16 0.01 295))",
+    "linear-gradient(135deg, oklch(0.38 0.20 55 / 0.9),  oklch(0.13 0.018 308))",
+    "linear-gradient(135deg, oklch(0.42 0.18 320 / 0.9), oklch(0.13 0.018 308))",
   ];
   const gradient = gradients[parseInt(d.id) % gradients.length];
 
@@ -228,7 +228,7 @@ function DiscoverEntry({ isDancer }: { isDancer: boolean }) {
       {/* Hero CTA */}
       <Card
         className="relative overflow-hidden rounded-2xl border-none p-6"
-        style={{ background: "linear-gradient(135deg, oklch(0.22 0.04 295), oklch(0.14 0.01 295))" }}
+        style={{ background: "linear-gradient(135deg, #341539, oklch(0.13 0.018 308))" }}
       >
         <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-white">

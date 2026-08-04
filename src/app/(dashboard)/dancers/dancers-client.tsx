@@ -12,12 +12,12 @@ import { MOCK_ALL_DANCERS, MOCK_ALL_PATRONS } from "@/lib/mock-data";
 import { formatUsd, formatGems } from "@/lib/format";
 
 const GRADIENTS = [
-  "linear-gradient(135deg, oklch(0.40 0.24 295 / 0.9), oklch(0.16 0.01 295))",
-  "linear-gradient(135deg, oklch(0.35 0.18 290 / 0.9), oklch(0.16 0.01 295))",
+  "linear-gradient(135deg, #341539e6, oklch(0.13 0.018 308))",
+  "linear-gradient(135deg, oklch(0.35 0.18 290 / 0.9), oklch(0.13 0.018 308))",
   "linear-gradient(135deg, oklch(0.50 0.06 240 / 0.9), oklch(0.20 0.02 240))",
   "linear-gradient(135deg, oklch(0.45 0.15 160 / 0.9), oklch(0.18 0.02 160))",
-  "linear-gradient(135deg, oklch(0.38 0.20 55 / 0.9),  oklch(0.16 0.01 295))",
-  "linear-gradient(135deg, oklch(0.42 0.18 320 / 0.9), oklch(0.16 0.01 295))",
+  "linear-gradient(135deg, oklch(0.38 0.20 55 / 0.9),  oklch(0.13 0.018 308))",
+  "linear-gradient(135deg, oklch(0.42 0.18 320 / 0.9), oklch(0.13 0.018 308))",
 ];
 
 /* ── Dancer card (patron view) ───────────────────────────────── */
