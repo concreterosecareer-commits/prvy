@@ -24,15 +24,15 @@ import type { ClubStats, Customer } from "./_data";
 
 // ── Color tokens ───────────────────────────────────────────────────────────────
 const C = {
-  red:   "oklch(0.5 0.22 25)",
-  c2:    "oklch(0.65 0.18 20)",
-  c3:    "oklch(0.4 0.15 30)",
-  c4:    "oklch(0.75 0.1 25)",
-  c5:    "oklch(0.3 0.05 25)",
+  red:   "oklch(0.48 0.24 295)",
+  c2:    "oklch(0.65 0.18 310)",
+  c3:    "oklch(0.40 0.15 280)",
+  c4:    "oklch(0.72 0.10 295)",
+  c5:    "oklch(0.30 0.06 295)",
   grid:  "oklch(0.95 0 0 / 6%)",
-  card:  "oklch(0.17 0.008 25)",
-  muted: "oklch(0.54 0.006 25)",
-  fg:    "oklch(0.95 0.003 25)",
+  card:  "oklch(0.17 0.008 295)",
+  muted: "oklch(0.54 0.006 295)",
+  fg:    "oklch(0.95 0.003 295)",
 };
 
 const TT: React.ComponentProps<typeof Tooltip>["contentStyle"] = {

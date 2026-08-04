@@ -253,7 +253,7 @@ export function ClubVIPClient() {
               </div>
             ) : (
               <table className="w-full min-w-[780px]">
-                <thead style={{ background: "oklch(0.14 0.008 25)" }}>
+                <thead style={{ background: "oklch(0.14 0.008 295)" }}>
                   <tr>
                     <th className="py-2 px-3 pl-4 text-left text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
                       Rank
@@ -360,7 +360,7 @@ export function ClubVIPClient() {
         >
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px]">
-              <thead style={{ background: "oklch(0.14 0.008 25)" }}>
+              <thead style={{ background: "oklch(0.14 0.008 295)" }}>
                 <tr>
                   <SortHeader label="Date"        sk="date"          current={shiftSort} dir={shiftDir} onSort={toggleShift} className="pl-4" />
                   <SortHeader label="Entertainer" sk="entertainerId" current={shiftSort} dir={shiftDir} onSort={toggleShift} />

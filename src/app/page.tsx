@@ -85,7 +85,7 @@ export default function LandingPage() {
               className="inline-block"
               style={{
                 background:
-                  "linear-gradient(135deg, oklch(0.7 0.22 25) 0%, oklch(0.5 0.22 25) 60%)",
+                  "linear-gradient(135deg, oklch(0.65 0.24 295) 0%, oklch(0.48 0.24 295) 60%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",

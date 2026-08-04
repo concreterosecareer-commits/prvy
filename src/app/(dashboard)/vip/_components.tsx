@@ -16,17 +16,17 @@ import type { TierDef, Shift, TierId, PeriodData } from "./_data";
 // ─── Colors ──────────────────────────────────────────────────────────────────
 
 export const C = {
-  red:      "oklch(0.5 0.22 25)",
+  red:      "oklch(0.48 0.24 295)",
   gold:     "oklch(0.72 0.14 85)",
   silver:   "oklch(0.70 0.003 0)",
   burgundy: "oklch(0.42 0.13 15)",
   teal:     "oklch(0.62 0.12 195)",
   lime:     "oklch(0.68 0.13 145)",
   grid:     "oklch(0.95 0 0 / 6%)",
-  card:     "oklch(0.17 0.008 25)",
-  bg:       "oklch(0.12 0.008 25)",
-  muted:    "oklch(0.54 0.006 25)",
-  fg:       "oklch(0.95 0.003 25)",
+  card:     "oklch(0.17 0.008 295)",
+  bg:       "oklch(0.12 0.008 295)",
+  muted:    "oklch(0.54 0.006 295)",
+  fg:       "oklch(0.95 0.003 295)",
 };
 
 export const TIER_COLOR: Record<TierId, string> = {
@@ -256,7 +256,7 @@ export function TierDetailModal({ shift, allShifts, onClose }: TierDetailModalPr
       <div
         className="w-full max-w-lg rounded-2xl p-6 max-h-[90vh] overflow-y-auto"
         style={{
-          background: "oklch(0.15 0.008 25)",
+          background: "oklch(0.15 0.008 295)",
           border: `1px solid ${style.border}40`,
           boxShadow: `0 24px 80px rgba(0,0,0,0.6), 0 0 40px ${style.glow}`,
         }}
@@ -290,7 +290,7 @@ export function TierDetailModal({ shift, allShifts, onClose }: TierDetailModalPr
                 key={t.id}
                 className="flex items-center gap-3 rounded-lg px-3 py-2.5"
                 style={{
-                  background: isCurrent ? `${s.border}18` : "oklch(0.12 0.008 25)",
+                  background: isCurrent ? `${s.border}18` : "oklch(0.12 0.008 295)",
                   border: isCurrent ? `1px solid ${s.border}40` : "1px solid transparent",
                 }}
               >
@@ -402,7 +402,7 @@ export function TierDetailModal({ shift, allShifts, onClose }: TierDetailModalPr
                   <div
                     key={s.id}
                     className="flex items-center justify-between rounded-lg px-3 py-2"
-                    style={{ background: "oklch(0.11 0.008 25)" }}
+                    style={{ background: "oklch(0.11 0.008 295)" }}
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <TierBadge tier={s.tier} size="xs" />

@@ -229,7 +229,7 @@ export function EntertainerVIPClient() {
         >
           <div className="overflow-x-auto">
             <table className="w-full min-w-[720px]">
-              <thead style={{ background: "oklch(0.14 0.008 25)" }}>
+              <thead style={{ background: "oklch(0.14 0.008 295)" }}>
                 <tr>
                   <SortHeader label="Date"       sk="date"          current={sortKey} dir={sortDir} onSort={toggleSort} className="pl-4" />
                   <SortHeader label="Club"        sk="clubId"        current={sortKey} dir={sortDir} onSort={toggleSort} />
