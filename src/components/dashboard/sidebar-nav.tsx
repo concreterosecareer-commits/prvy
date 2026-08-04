@@ -64,7 +64,7 @@ export function SidebarNav({ unreadCounts, role }: SidebarNavProps) {
                 />
                 <item.icon
                   className={cn(
-                    "h-4 w-4 shrink-0 transition-transform duration-200",
+                    "h-4 w-4 shrink-0 text-white transition-transform duration-200",
                     !active && "group-hover:scale-110"
                   )}
                 />
