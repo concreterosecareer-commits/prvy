@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-const DURATION = 300; // ms for each half of the transition
+const DURATION = 150; // ms for each half of the transition
 
 type Phase = "idle" | "out" | "in";
 
