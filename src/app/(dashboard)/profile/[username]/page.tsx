@@ -26,6 +26,7 @@ import { FollowListModal } from "@/components/follow/follow-list-modal";
 import { PostCard } from "@/components/feed/post-card";
 import { TipModal } from "@/components/tip/tip-modal";
 import { createClient } from "@/lib/supabase/client";
+import { MOCK_PROFILES } from "@/lib/mock-data";
 import type { FeedPost } from "@/types/feed";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -111,25 +112,36 @@ export default function ProfilePage() {
         .eq("username", username)
         .single();
 
-      // Profile not found OR private and we're blocked
-      if (!targetProfile) {
+      // Fall back to mock data if Supabase finds nothing
+      const mock = !targetProfile ? MOCK_PROFILES[username] : undefined;
+      if (!targetProfile && !mock) {
         setNotFound(true);
         setLoading(false);
         return;
       }
 
-      setProfile(targetProfile as ProfileData);
-      setFollowerCount(targetProfile.follower_count ?? 0);
-      const wd = (targetProfile as Record<string, unknown>).working_days;
+      const resolvedProfile = (targetProfile ?? mock) as ProfileData;
+      setProfile(resolvedProfile);
+      setFollowerCount(resolvedProfile.follower_count ?? 0);
+      const wd = (resolvedProfile as unknown as Record<string, unknown>).working_days;
       if (Array.isArray(wd)) setWorkingDays(wd as number[]);
 
+      // For mock profiles, use embedded status/role — skip DB lookup
+      if (mock) {
+        setUserStatus(STATUS_LABEL[mock.status] ?? "Offline");
+        setProfileRole(mock.role);
+        setFollowStatus("none");
+        setLoading(false);
+        return;
+      }
+
       const [{ data: targetUser }, { data: followRow }] = await Promise.all([
-        supabase.from("users").select("status, role").eq("id", targetProfile.id).single(),
+        supabase.from("users").select("status, role").eq("id", resolvedProfile.id).single(),
         supabase
           .from("follows")
           .select("status")
           .eq("follower_id", user.id)
-          .eq("following_id", targetProfile.id)
+          .eq("following_id", resolvedProfile.id)
           .maybeSingle(),
       ]);
 
@@ -143,13 +155,13 @@ export default function ProfilePage() {
 
       // Only fetch posts if we can see them (public profile or accepted follower)
       const canSeeContent =
-        !targetProfile.is_private || fs === "accepted";
+        !resolvedProfile.is_private || fs === "accepted";
 
       if (canSeeContent) {
         const { data: rawPosts } = await supabase
           .from("posts")
           .select("*")
-          .eq("author_id", targetProfile.id)
+          .eq("author_id", resolvedProfile.id)
           .eq("is_public", true)
           .order("created_at", { ascending: false })
           .limit(30);
@@ -171,11 +183,11 @@ export default function ProfilePage() {
           }, {});
 
           const author = {
-            id: targetProfile.id,
-            display_name: targetProfile.display_name,
-            username: targetProfile.username,
-            avatar_url: targetProfile.avatar_url,
-            is_verified: targetProfile.is_verified,
+            id: resolvedProfile.id,
+            display_name: resolvedProfile.display_name,
+            username: resolvedProfile.username,
+            avatar_url: resolvedProfile.avatar_url,
+            is_verified: resolvedProfile.is_verified,
           };
 
           setPosts(

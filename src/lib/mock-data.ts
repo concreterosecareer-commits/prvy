@@ -161,6 +161,83 @@ export const MOCK_TRANSACTIONS_TABLE = [
   { id: "7", type: "Purchase", description: "Purchased Gems", party: "-", date: "May 16, 2024", amount: 2500, status: "Completed" },
 ];
 
+export const MOCK_PROFILES: Record<string, {
+  id: string; username: string; display_name: string; avatar_url: string;
+  cover_url: null; bio: string; location: string; height: string | null;
+  languages: string[] | null; address: null; contact_email: null; contact_phone: null;
+  working_days: number[]; rating: number; response_rate: number;
+  patron_count: number; follower_count: number; following_count: number;
+  earnings_total: number; is_verified: boolean; is_private: boolean;
+  role: string; status: string;
+}> = {
+  janetofficial: {
+    id: "mock-1", username: "janetofficial", display_name: "Janet",
+    avatar_url: "/dancer 1.jpeg", cover_url: null,
+    bio: "Your favorite entertainer 💫 Available most nights. Tips always appreciated.",
+    location: "Houston, TX", height: "5'6\"", languages: ["English"],
+    address: null, contact_email: null, contact_phone: null,
+    working_days: [3, 4, 5, 6], rating: 4.9, response_rate: 97,
+    patron_count: 234, follower_count: 1820, following_count: 42,
+    earnings_total: 12560, is_verified: true, is_private: false,
+    role: "entertainer", status: "active",
+  },
+  sapphire: {
+    id: "mock-2", username: "sapphire", display_name: "Sapphire",
+    avatar_url: "/dancer 2.jpeg", cover_url: null,
+    bio: "💎 Sapphire — exclusive, elegant, unforgettable.",
+    location: "Houston, TX", height: "5'8\"", languages: ["English", "Spanish"],
+    address: null, contact_email: null, contact_phone: null,
+    working_days: [4, 5, 6], rating: 4.8, response_rate: 92,
+    patron_count: 182, follower_count: 1340, following_count: 31,
+    earnings_total: 9870, is_verified: true, is_private: false,
+    role: "entertainer", status: "active",
+  },
+  babyjules: {
+    id: "mock-3", username: "babyjules", display_name: "Baby Jules",
+    avatar_url: "/dancer 3.jpeg", cover_url: null,
+    bio: "Sweet but deadly 🌹 Book me for a night you won't forget.",
+    location: "Houston, TX", height: "5'4\"", languages: ["English"],
+    address: null, contact_email: null, contact_phone: null,
+    working_days: [2, 4, 5, 6], rating: 4.7, response_rate: 88,
+    patron_count: 156, follower_count: 1105, following_count: 28,
+    earnings_total: 8430, is_verified: false, is_private: false,
+    role: "entertainer", status: "away",
+  },
+  maxine: {
+    id: "mock-4", username: "maxine", display_name: "Maxine",
+    avatar_url: "/dancer 4.jpg", cover_url: null,
+    bio: "Maxine 🔥 Come find me on weekends.",
+    location: "Houston, TX", height: "5'7\"", languages: ["English"],
+    address: null, contact_email: null, contact_phone: null,
+    working_days: [5, 6], rating: 4.6, response_rate: 84,
+    patron_count: 129, follower_count: 890, following_count: 19,
+    earnings_total: 7120, is_verified: false, is_private: false,
+    role: "entertainer", status: "active",
+  },
+  luna_star: {
+    id: "mock-5", username: "luna_star", display_name: "Luna",
+    avatar_url: "/dancer 5.jpeg", cover_url: null,
+    bio: "🌙 Luna — shining brightest after dark.",
+    location: "Houston, TX", height: "5'5\"", languages: ["English"],
+    address: null, contact_email: null, contact_phone: null,
+    working_days: [3, 4, 5, 6], rating: 4.5, response_rate: 80,
+    patron_count: 98, follower_count: 720, following_count: 15,
+    earnings_total: 5430, is_verified: false, is_private: false,
+    role: "entertainer", status: "offline",
+  },
+  raven_xo: {
+    id: "mock-6", username: "raven_xo", display_name: "Raven",
+    avatar_url: "/dancer 6.jpg", cover_url: null,
+    bio: "Raven 🖤 Mysterious. Magnetic. Unforgettable.",
+    location: "Houston, TX", height: "5'6\"", languages: ["English"],
+    address: null, contact_email: null, contact_phone: null,
+    working_days: [4, 5, 6], rating: 4.7, response_rate: 90,
+    patron_count: 87, follower_count: 640, following_count: 12,
+    earnings_total: 4980, is_verified: false, is_private: false,
+    role: "entertainer", status: "active",
+  },
+};
+
 export const MOCK_INVITES = [
   { id: "1", name: "Luna",     username: "luna_star",  message: "Hey! I'd love to connect with you on PRIVY.",          time: "2h ago",    status: "pending" },
   { id: "2", name: "Raven",    username: "raven_xo",   message: "Looking forward to getting to know you better!",       time: "5h ago",    status: "pending" },
