@@ -81,16 +81,7 @@ export default function LandingPage() {
         <div className="relative z-10">
           <h1 className="mx-auto max-w-4xl text-5xl font-bold leading-[1.1] tracking-tight uppercase md:text-7xl">
             What Diamonds{" "}
-            <span
-              className="inline-block"
-              style={{
-                background:
-                  "linear-gradient(135deg, #4a1f50 0%, #341539 60%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
+            <span className="inline-block text-white">
               Are Made Of.
             </span>
           </h1>
