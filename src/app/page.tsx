@@ -80,9 +80,9 @@ export default function LandingPage() {
 
         <div className="relative z-10">
           <h1 className="mx-auto max-w-4xl text-5xl font-bold leading-[1.1] tracking-tight uppercase md:text-7xl">
-            What Diamonds{" "}
+            For Those{" "}
             <span className="inline-block text-white">
-              Are Made Of.
+              In The Know.
             </span>
           </h1>
 
