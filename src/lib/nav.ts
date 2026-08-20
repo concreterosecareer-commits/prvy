@@ -5,6 +5,7 @@ import {
   BarChart3,
   Settings,
   HelpCircle,
+  CalendarDays,
 } from "lucide-react";
 import type { ComponentType } from "react";
 import { HotSpotsIcon } from "@/components/icons/hot-spots-icon";
@@ -39,6 +40,7 @@ export const PRIMARY_NAV: NavItem[] = [
   { label: "Feed",        href: "/feed",            icon: Newspaper,      clubHidden: true },
   { label: "Connections", href: "/connections",     icon: Users,          clubHidden: true },
   { label: "Hot Spots",   href: "/hot-spots",       icon: HotSpotsIcon,   clubHidden: true },
+  { label: "Calendar",   href: "/calendar",        icon: CalendarDays,   clubHidden: true },
   // Analytics routes differ by role — both show as "Analytics" in the sidebar
   { label: "Analytics",   href: "/club/analytics",  icon: BarChart3,      clubOnly: true },
   { label: "Analytics",   href: "/analytics",       icon: BarChart3,      dancerOnly: true },
