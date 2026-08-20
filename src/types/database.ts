@@ -16,7 +16,30 @@ export type NotificationType =
   | "subscriber"
   | "payout"
   | "invite"
-  | "system";
+  | "system"
+  | "booking";
+
+export type BookingStatus = "pending" | "confirmed" | "completed" | "cancelled" | "refunded";
+export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
+export type BookingType = "private" | "vip" | "table_dance" | "club_visit";
+
+export type BookingRow = {
+  id: string;
+  patron_id: string;
+  entertainer_id: string;
+  club_name: string | null;
+  booking_type: BookingType;
+  booking_status: BookingStatus;
+  payment_status: PaymentStatus;
+  scheduled_at: string;
+  duration_minutes: number;
+  amount_usd: number;
+  patron_notes: string | null;
+  entertainer_notes: string | null;
+  reference: string;
+  created_at: string;
+  updated_at: string;
+};
 export type ReferralStatus = "pending" | "active" | "expired";
 export type MediaType = "image" | "video" | "audio";
 
@@ -205,6 +228,7 @@ export type Database = {
       transactions: { Row: TransactionRow; Insert: Partial<TransactionRow>; Update: Partial<TransactionRow>; Relationships: [] };
       referrals: { Row: ReferralRow; Insert: Partial<ReferralRow>; Update: Partial<ReferralRow>; Relationships: [] };
       notifications: { Row: NotificationRow; Insert: Partial<NotificationRow>; Update: Partial<NotificationRow>; Relationships: [] };
+      bookings: { Row: BookingRow; Insert: Partial<BookingRow>; Update: Partial<BookingRow>; Relationships: [] };
       analytics_daily: { Row: AnalyticsDailyRow; Insert: Partial<AnalyticsDailyRow>; Update: Partial<AnalyticsDailyRow>; Relationships: [] };
       posts: { Row: PostRow; Insert: Partial<PostRow>; Update: Partial<PostRow>; Relationships: [] };
       post_likes: { Row: PostLikeRow; Insert: Partial<PostLikeRow>; Update: Partial<PostLikeRow>; Relationships: [] };

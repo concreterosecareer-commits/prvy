@@ -258,3 +258,67 @@ export const MOCK_EARNINGS_BY_SOURCE = [
   { name: "Subscriptions", value: 20 },
   { name: "Other", value: 15 },
 ];
+
+export type MockBooking = {
+  id: string;
+  patron_id: string;
+  patron_name: string;
+  patron_avatar: string | null;
+  club_name: string;
+  booking_type: "private" | "vip" | "table_dance" | "club_visit";
+  booking_status: "pending" | "confirmed" | "completed" | "cancelled" | "refunded";
+  payment_status: "pending" | "paid" | "failed" | "refunded";
+  scheduled_at: string;
+  duration_minutes: number;
+  amount_usd: number;
+  reference: string;
+  notes: string | null;
+};
+
+export const MOCK_BOOKINGS: MockBooking[] = [
+  {
+    id: "bk-1",
+    patron_id: "patron-1",
+    patron_name: "John M.",
+    patron_avatar: null,
+    club_name: "Sapphire Club",
+    booking_type: "private",
+    booking_status: "confirmed",
+    payment_status: "paid",
+    scheduled_at: "2026-08-21T17:00:00",
+    duration_minutes: 60,
+    amount_usd: 250,
+    reference: "PRV-4821",
+    notes: null,
+  },
+  {
+    id: "bk-2",
+    patron_id: "patron-2",
+    patron_name: "Michael R.",
+    patron_avatar: null,
+    club_name: "Ruby Club",
+    booking_type: "private",
+    booking_status: "confirmed",
+    payment_status: "paid",
+    scheduled_at: "2026-08-21T20:30:00",
+    duration_minutes: 45,
+    amount_usd: 180,
+    reference: "PRV-4835",
+    notes: "VIP booth requested",
+  },
+  {
+    id: "bk-3",
+    patron_id: "patron-3",
+    patron_name: "David K.",
+    patron_avatar: null,
+    club_name: "Spearmint Club",
+    booking_type: "vip",
+    booking_status: "confirmed",
+    payment_status: "paid",
+    scheduled_at: "2026-08-22T19:00:00",
+    duration_minutes: 60,
+    amount_usd: 300,
+    reference: "PRV-4849",
+    notes: null,
+  },
+];

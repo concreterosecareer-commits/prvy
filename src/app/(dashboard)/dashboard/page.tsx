@@ -18,6 +18,7 @@ import {
   Receipt,
 } from "lucide-react";
 import { MOCK_RECENT_ACTIVITY, MOCK_HOT_SPOTS } from "@/lib/mock-data";
+import { UpcomingBookings } from "@/components/dashboard/upcoming-bookings";
 import { formatGems, formatUsd } from "@/lib/format";
 
 export default async function DashboardPage() {
@@ -173,6 +174,9 @@ export default async function DashboardPage() {
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">Here&apos;s your activity overview.</p>
       </div>
+
+      {/* Upcoming Bookings — dancer only, always first */}
+      {isDancer && <UpcomingBookings />}
 
       {/* Zone 1 — Stat strip */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
